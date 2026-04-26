@@ -1,3 +1,4 @@
+import { MousePointer2 } from 'lucide-react';
 import React from 'react';
 
 export const chapter_causative = {
