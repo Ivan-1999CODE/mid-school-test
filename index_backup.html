@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國中會考英文總複習 GrammarHero</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Babel for JSX support -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-[#F7F9FC]">
+    <div id="root"></div>
+
+    <!-- Main Application Script -->
+    <script type="text/babel" data-type="module">
+        // FIX: Added ?deps=react@18.2.0 to all imports to ensure they share the same React instance
+        import React, { useState, useEffect } from 'https://esm.sh/react@18.2.0';
+        import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0';
+        import { motion, AnimatePresence } from 'https://esm.sh/framer-motion@10.12.16?deps=react@18.2.0,react-dom@18.2.0';
+        import {
+            BookOpen, Clock, Search, Zap, Layers, FileText, ChevronRight,
+            CheckCircle2, XCircle, Trophy, ArrowLeft, Star, RefreshCw,
+            HelpCircle, MessageCircle, GitBranch, Scale, List, User,
+            Calendar, AlertCircle, MousePointer2, Eye
+        } from 'https://esm.sh/lucide-react@0.263.1?deps=react@18.2.0,react-dom@18.2.0';
+
+        // --- FULL DATA STRUCTURE ---
+
+        const GRAMMAR_DATA = {
+            "ving-tov-imp": {
+                id: "ving-tov-imp",
+                title: "Ving, ToV, 祈使句",
+                icon: <Zap className="w-6 h-6 text-amber-500" />,
+                color: "bg-amber-50 border-amber-200",
+                accent: "text-amber-600",
+                topics: [{ id: "t1", title: "不定詞 vs 動名詞" }, { id: "t2", title: "祈使句用法" }],
+                questions: [
+                    { id: "q_v1", question: "Writing stories ______ what my father liked to do best in his younger days.", options: ["were", "was", "have been", "has been"], correctIndex: 1, explanation: "把「寫故事」當成一整件事看，就是單數喔！因為描述過去的事情，所以用 was。" },
+                    { id: "q_v2", question: "Josh has planned to make a trip to New York and ______ some of his friends there.", options: ["visit", "visits", "visiting", "visited"], correctIndex: 0, explanation: "前面 plan to 已經有 to，用 and 連接後面的動詞可以省略 to，直接選原形 visit 就好！" },
+                    { id: "q_v3", question: "Alison doesn't like ______ what to do.\nShe only does things she wants to do.", options: ["told", "to tell", "be told", "to be told"], correctIndex: 3, explanation: "Alison 不喜歡「被」別人教做事。被動要用 to be + pp，所以選 to be told。" },
+                    { id: "q_v4", question: "It almost killed Kevin to take care of his baby sister for one afternoon.\nHe wondered how his mom could do ______ every day.", options: ["her", "it", "one", "them"], correctIndex: 1, explanation: "前面提過了「照顧妹妹」這件事，怕囉嗦就直接用 it 來代替這件事囉！" },
+                    { id: "q_v5", question: "Playing games on the cellphone ______ popular with high school students.", options: ["is", "are", "being", "to be"], correctIndex: 0, explanation: "「在手機上玩遊戲」視為一件事（單數），所以動詞配 is。" },
+                    { id: "q_v6", question: "______ a map with you when you go to a place for the first time.", options: ["Have taken", "Take", "Taking", "To take"], correctIndex: 1, explanation: "這是一個祈使句（給建議或命令），開頭直接放原形動詞 Take！" },
+                    { id: "q_v7", question: "Playing sports at least three times a week ______ good for your health.", options: ["is", "are", "has", "have"], correctIndex: 0, explanation: "「每週運動三次」是一件事（單數主詞），選 is 就對了！" },
+                    { id: "q_v8", question: "Getting up early on a cold morning is not easy, ______?", options: ["are you", "do you", "does it", "is it"], correctIndex: 3, explanation: "前面 Getting up 是一件事所以用 it 表示。原本句子裡有 not，反過來當然要配肯定的 is it。" },
+                    { id: "q_v9", question: "______ in the daytime is not good for you.\nYou may not sleep well at night and feel tired the next day.", options: ["Slept", "Sleeps", "Have slept", "Sleeping"], correctIndex: 3, explanation: "要當句子的主詞，動詞要加上 ing 變成動名詞 Sleeping。" },
+                    { id: "q_v10", question: "I think ______ is more fun to go to the movies with my friends than with my family.", options: ["that", "there", "one", "it"], correctIndex: 3, explanation: "「和朋友看電影」太長了被丟到後面，前面要找一個「替身」，就請虛主詞 it 來頂替吧！" },
+                    { id: "q_v11", question: "The most convenient way to get around this small town is ______ a bike.", options: ["to ride", "to have ridden", "rides", "rode"], correctIndex: 0, explanation: "最方便的方法「是去」騎腳踏車，is 後面加 to ride 可以表示目的或是你的內容。" },
+                    { id: "q_v12", question: "I usually carry a camera on my trips; taking pictures ______ a good way for me to remember the experience.", options: ["to be", "is", "being", "are"], correctIndex: 1, explanation: "「拍照 (Taking pictures)」這件事當主詞算單數，所以動詞要用 is。" },
+                    { id: "q_v13", question: "Playing in the water ______ lots of fun on a hot summer day.", options: ["is", "are", "has", "have"], correctIndex: 0, explanation: "「玩水」當作一件事看（單數主詞），動詞當然配 is 囉！" },
+                    { id: "q_v14", question: "It was important for Kevin ______ his homework quickly because he had to help his parents sell fruit in the night market.", options: ["finish", "to finish", "finishes", "finished"], correctIndex: 1, explanation: "看到 It is/was + 形容詞 + for 人，後面固定接 to + 原形動詞，這是超級常考的固定句型！" },
+                    { id: "q_v15", question: "Learning foreign languages ______ me to know more about other countries.", options: ["helps", "helping", "help", "to help"], correctIndex: 0, explanation: "「學外語」這件事算單數 (it)，動詞因為第三人稱單數要加 s，選 helps。" },
+                    { id: "q_v16", question: "Wendy: Do you know where the library is?\nSimon: Just ______ going for two more blocks and you'll see it.", options: ["keep", "to keep", "keeping", "keeps"], correctIndex: 0, explanation: "別人問路你給指示（祈使句），開頭一律用原形動詞，選 keep 就好。" },
+                    { id: "q_v17", question: "______ good grades, you have to study hard.", options: ["To get", "Getting", "Get", "Gets"], correctIndex: 0, explanation: "放在句首表示「為了...」的意思，必須要用 To + 原形動詞，意思是「為了拿好成績...」。" },
+                    { id: "q_v18", question: "Asking questions ______ Henna learn more and better.", options: ["help", "helps", "helping", "to help"], correctIndex: 1, explanation: "「發問」當作單數的一件事，後面的動詞要加 s，選 helps！" },
+                    { id: "q_v19", question: "Judy: The ball game will be on TV tomorrow at six in the morning.\nLucy: ______ up early and you won't miss it.", options: ["Get", "To get", "Getting", "Gets"], correctIndex: 0, explanation: "這是祈使句（叫你早起），一樣用原形動詞開頭，選 Get。" },
+                    { id: "q_v20", question: "Playing video games is fun, ______?", options: ["do they", "aren't they", "does it", "isn't it"], correctIndex: 3, explanation: "附加問句把握「前肯後否的原則」。前面是 is fun，後面要變否定 isn't。主詞是一件事，用 it。" },
+                    { id: "q_v21", question: "A-ming: Dad, can I go dancing tomorrow?\nMr. Wu: ______ your homework and we'll talk about it.", options: ["Finishes", "Finishing", "To finish", "Finish"], correctIndex: 3, explanation: "爸爸叫你先把功課做完，祈使句開頭直接用原形動詞 Finish。" },
+                    { id: "q_v22", question: "______ the lesson before class gives me a better idea about what the teacher is going to teach.", options: ["Preview", "Previews", "Previewed", "Previewing"], correctIndex: 3, explanation: "「課前預習」當主詞，要加上 ing 變成動名詞 Previewing 喔！" },
+                    { id: "q_v23", question: "Watching American movies ______ one of the activities we enjoy most in our English class.", options: ["is", "are", "to be", "being"], correctIndex: 0, explanation: "「看美國電影」這件事算作單數，加上時態是現在式，動詞配 is。" },
+                    { id: "q_v24", question: "______ carefully before you buy a new house.", options: ["Thinking", "To think", "Thinks", "Think"], correctIndex: 3, explanation: "叫你買房子前要先想清楚，祈使句開頭直接用原形 Think。" },
+                    { id: "q_v25", question: "Reading comic books ______ fun.", options: ["is", "are", "has", "have"], correctIndex: 0, explanation: "「看漫畫」當作一件事（單數），選 is。" },
+                    { id: "q_v26", question: "John always goes to bed late at night, so ______ early is difficult for him.", options: ["get up", "got up", "gets up", "getting up"], correctIndex: 3, explanation: "「早起」當作主詞時，動詞要加上 ing 變成 Getting up。" }
+                ]
+            },
+            "tenses": {
+                id: "tenses",
+                title: "時態",
+                icon: <Clock className="w-6 h-6 text-emerald-500" />,
+                color: "bg-emerald-50 border-emerald-200",
+                accent: "text-emerald-600",
+                topics: [{ id: "t1", title: "時態綜合練習" }],
+                questions: [
+                    { id: "q_t1", question: "For the past twenty years, my father ______ in a school library.", options: ["worked", "has worked", "is working", "works"], correctIndex: 1, explanation: "看到 For the past twenty years (過去的二十年來一直到現在)，一定要選『現在完成式 (has/have + p.p.)』！" },
+                    { id: "q_t2", question: "The weather ______ rainy and cloudy in the last few days.", options: ["has been", "had been", "will be", "would be"], correctIndex: 0, explanation: "in the last few days 是『過去這幾天以來做的事』，代表一路持續到現在，要選現在完成式 has been。" },
+                    { id: "q_t3", question: "Have you got anything for Joe ______?", options: ["almost", "either", "soon", "yet"], correctIndex: 3, explanation: "現在完成式的疑問句或否定句，字尾最愛加個 yet (已經...了嗎？ / 還沒)！" },
+                    { id: "q_t4", question: "Tom ______ ten pounds over the past two months.", options: ["loses", "has lost", "will lose", "was losing"], correctIndex: 1, explanation: "over the past two months (過去兩個月以來一直到現在)，要選現在完成式 has lost。" },
+                    { id: "q_t5", question: "We ______ Aunt Polly for a long time, so we visited her last weekend.", options: ["don't see", "haven't seen", "hadn't seen", "wouldn't see"], correctIndex: 2, explanation: "visited (拜訪) 已經是過去式了，『在這之前』更早就一直沒見面了，所以要用『過去的過去』：過去完成式 hadn't seen。" },
+                    { id: "q_t6", question: "Mr. Yang has worked in this factory ______ 1968.", options: ["before", "for", "in", "since"], correctIndex: 3, explanation: "1968年是過去的一個時間點，表示從那個時候開始到現在，要配 since (自從)。" },
+                    { id: "q_t7", question: "Alice: Have you ever been to a baseball game?\nJamie: No, never. ______\nAlice: Sure.\nBaseball is my favorite sport.", options: ["Do you?", "Have you?", "Don't you?", "Haven't you?"], correctIndex: 1, explanation: "人家用 Have you...? 問你，你反問回去當然也是順勢用 Have you 囉！" },
+                    { id: "q_t8", question: "Ryan: Would you like to play tennis with me?\nDara: No, thanks. ______ it for three hours already.\nI'm tired now.", options: ["I play", "I'm playing", "I've played", "I'll play"], correctIndex: 2, explanation: "看到 already (已經) 就知道動作完成了，要選現在完成式 I've played (I have played)。" },
+                    { id: "q_t9", question: "Tina is getting married to a man she has known only ______ a month.", options: ["for", "in", "on", "since"], correctIndex: 0, explanation: "a month (一個月) 是一段時間長度，要配 for；如果是剛好的時間點才配 since。" },
+                    { id: "q_t10", question: "Judy moved to France and has lived there ______ two years.", options: ["before", "for", "in", "since"], correctIndex: 1, explanation: "two years (兩年) 也是一段時間的長度，一樣要配 for。" },
+                    { id: "q_t11", question: "Have you seen John's sister?\nYes, I ______.", options: ["have", "had", "did", "saw"], correctIndex: 0, explanation: "人家句子前面用 Have you 問，回答就直接挑 I have，超簡單！" },
+                    { id: "q_t12", question: "I sent Lucy two e-mails last week, but she has not answered me ______.", options: ["already", "also", "either", "yet"], correctIndex: 3, explanation: "完成式的否定句（has not），最後面通常都是放 yet（還沒有）。" },
+                    { id: "q_t13", question: "I need someone ______ his work to take out the garbage for me.", options: ["finish", "finished", "has finished", "who has finished"], correctIndex: 3, explanation: "用 who has finished 來修飾前面的 someone，整句話的意思是『已經做完工作的人』。" },
+                    { id: "q_t14", question: "You've studied English for a long time, ______?", options: ["did you", "didn't you", "have you", "haven't you?"], correctIndex: 3, explanation: "前面是 You've (You have 的縮寫)，附加問句就要顛倒成否定的 haven't you。" },
+                    { id: "q_t15", question: "Dad: Where are you, Mary?\nCome out!\nMom: You know, ______ with you.\nShe won't come out until you find her.", options: ["she'll play", "she's playing", "she plays", "she played"], correctIndex: 1, explanation: "媽媽說『瑪麗現在正在跟你玩呢』，當下正在發生的事要用現在進行式 she's playing。" },
+                    { id: "q_t16", question: "When the baby cried, Mr. Wu ______ in the kitchen.", options: ["cooked", "was cooking", "has cooked", "is going to cook"], correctIndex: 1, explanation: "當嬰兒哭出來的那個過去瞬間，吳先生『當下正在』煮飯，所以要用過去進行式 was cooking。" },
+                    { id: "q_t17", question: "I ______ a bath when someone turned off the light.", options: ["was taking", "took", "am taking", "had taken"], correctIndex: 0, explanation: "當燈被突然關掉的瞬間，我『當下正好正在』洗澡，所以用過去進行式 was taking。" },
+                    { id: "q_t18", question: "Betty ______ fake watches when the police came.", options: ["sells", "is selling", "was selling", "has sold"], correctIndex: 2, explanation: "當警察來的那個瞬間，她『正好正在』賣假錶，選 past continuous: was selling。" },
+                    { id: "q_t19", question: "Writing stories ______ what my father liked to do best in his younger days.", options: ["were", "was", "have been", "has been"], correctIndex: 1, explanation: "這整句話都在講老爸年輕時的事，因為後面用 liked (過去式)，前面也要配合用過去式 was！" },
+                    { id: "q_t20", question: "We were so sure that Jerry ______ well on the difficult job.\nHis past experience in other work showed he was the right guy for it.\nSo when he failed, no one believed it.", options: ["had done", "did", "has done", "would do"], correctIndex: 3, explanation: "這是在早前的時間預估後面會發生的事（原以為他將會表現得很好），要把 will 退一步改成會過去式 would do。" },
+                    { id: "q_t21", question: "Mozart ______ his first music when he was only six years old.", options: ["is writing", "has written", "will write", "wrote"], correctIndex: 3, explanation: "莫札特已經去當天使很久啦，他的事蹟都已經成為歷史，直接用過去式 wrote 就對了。" },
+                    { id: "q_t22", question: "I don't have any money with me because I ______ my wallet this morning.", options: ["had lost", "would lose", "lost", "was losing"], correctIndex: 2, explanation: "this morning 在這裡是很明確的「過去時間」（今早把錢包弄丟了），所以用過去式 lost。" },
+                    { id: "q_t23", question: "The medicine I ______ you this morning should be taken three times a day.", options: ["to give", "given", "giving", "gave"], correctIndex: 3, explanation: "今早『給』你的藥，給的這個動作已經做完了，所以要用過去式 gave。" },
+                    { id: "q_t24", question: "The fishermen knew little about the island when they ______ there.", options: ["arrived", "would arrive", "arrive", "have arrived"], correctIndex: 0, explanation: "這句話前面用 knew (過去式)，代表整段故事都在描述過去，抵達所以也要用過去式 arrived。" },
+                    { id: "q_t25", question: "Tommy is looking for the watch his uncle ______ him on his birthday.", options: ["gives", "gave", "to give", "has given"], correctIndex: 1, explanation: "送手錶這件事是上一次生日『過去』發生的事，要用過去式 gave 喔。" },
+                    { id: "q_t26", question: "Tina ______ hamburgers for lunch every day last week.", options: ["has", "had", "has had", "was having"], correctIndex: 1, explanation: "看到 last week (上週) 就知道是過去發生的事啦，吃漢堡要用過去式 had。" },
+                    { id: "q_t27", question: "My brother doesn't live with us.\nHe ______ out after he got married.", options: ["has moved", "will move", "was moving", "moved"], correctIndex: 3, explanation: "他結婚 (got married) 是過去式，那他『搬出去』想必也是過去完成的動作，選 moved。" },
+                    { id: "q_t28", question: "At first, my bookstore's business ______ not very good.", options: ["is", "does", "was", "did"], correctIndex: 2, explanation: "只要看到 At first (起初) 這個字，通常代表以前狀態跟現在不一樣，過去狀態要選 was。" },
+                    { id: "q_t29", question: "Peter ______ a trip to Yangmingshan and had a good time.", options: ["takes", "took", "is taking", "will take"], correctIndex: 1, explanation: "最後面有個 had (過去式) 加上 and 連接在一起，代表前面一定也是平起平坐的過去式 took。" },
+                    { id: "q_t30", question: "Christine: Dad, I'm hungry.\nDo we have anything to eat?\nMr. Chen: You can have some bread I ______ from the supermarket.\nIt's on the table.", options: ["am buying", "to buy", "bought", "will buy"], correctIndex: 2, explanation: "那個麵包是爸爸『先前去逛超市時』買的，買的動作已經發生過，選過去式 bought。" },
+                    { id: "q_t31", question: "He ______ at home.\nHe's in his office now.", options: ["isn't", "can't", "wasn't", "doesn't"], correctIndex: 0, explanation: "看後面寫 He's in his office now (他現在在辦公室)，代表『現在』不在家裡，用現在式 isn't。" },
+                    { id: "q_t32", question: "She ______ to the department store and bought two new sweaters.", options: ["has gone", "is going", "went", "goes"], correctIndex: 2, explanation: "後面有個 bought 是過去式，有 and 連接代表前後時態是對稱的，所以前面選過去式的 went。" },
+                    { id: "q_t33", question: "Amy: How's the weather there in Japan?\nIs it snowing?\nSandy: No, but ______ for the next few days.\nI learned it from the TV news.", options: ["it was", "it has", "it is", "it will"], correctIndex: 3, explanation: "next few days 是『接下來幾天的未來』，未來式直接選 it will 就對了，後面省略了 snow。" },
+                    { id: "q_t34", question: "Tom: Jean, ______ to the movies with us tonight?\nJean: Sorry, I can't.\nI have an important exam tomorrow.", options: ["did you go", "are you going", "have you gone", "do you go"], correctIndex: 1, explanation: "問今晚要不要計畫去哪，可以用『現在進行式 (are you going)』來代替未來式，很常見的口語用法喔！" },
+                    { id: "q_t35", question: "Lisa: What ______ this morning?\nTina: Well, it's Sunday.\nI think I'll go to church with my father.", options: ["have you done", "are you going to do", "did you do", "were you doing"], correctIndex: 1, explanation: "It's Sunday... I'll go 表明這是問今天早上『你計畫/打算要做什麼』，選表示計畫的 are you going to do。" },
+                    { id: "q_t36", question: "A new road is going to ______ in town.", options: ["build", "building", "be built", "have built"], correctIndex: 2, explanation: "馬路不可能自己建造自己，一定是『被』建造，加上前方有 is going to，所以後面要接原形的被動語態 be built。" },
+                    { id: "q_t37", question: "Alex: Why are you still here?\nIt's almost eight o'clock.\nTom: Because I ______ my work.\nDon't worry.\nIt's almost done.", options: ["wasn't finishing", "wouldn't finish", "haven't finished", "won't finish"], correctIndex: 2, explanation: "Tom 解釋為什麼他現在還不能走，因為他的工作到目前為止都『還沒』完成，現在完成式 haven't finished。" },
+                    { id: "q_t38", question: "Nana: Did you mail the cards to your teachers?\nAnnie: No, I want to check them again.\nI ______ them after dinner.", options: ["mailed", "mail", "have mailed", "will mail"], correctIndex: 3, explanation: "Annie 說她晚餐後『會』寄出去。這種「當下決定未來計畫」的情況，用單純的未來式 will mail。" },
+                    { id: "q_t39", question: "Abby: Too bad you couldn't come to the beach with us.\nIt was so much fun there!\nYou must come next time.\nBree: No, thanks.\nI don't think ______ any fun.\nI can't swim.", options: ["I was having", "I've had", "I have", "I'll have"], correctIndex: 3, explanation: "我覺得『將會』不好玩，這是在推測未來要發生的事，選 I'll have (I will have)。" },
+                    { id: "q_t40", question: "Mom: Peter, be sure to finish your school report before you go to bed.\nPeter: OK, Mom, I ______.", options: ["am", "do", "have", "will"], correctIndex: 3, explanation: "媽媽交代事情，彼得答應『我會的』，這是給予未來的承諾，用 I will。" },
+                    { id: "q_t41", question: "Lily: When will Uncle Tom come to see me?\nMom: He'll visit us this weekend.\nHe ______ me that by e-mail.", options: ["told", "tells", "will tell", "was going to tell"], correctIndex: 0, explanation: "叔叔『先前已經』在 e-mail 裡面先告訴我這件事了，發生過的事用過去式 told。" },
+                    { id: "q_t42", question: "On Children's Day, Ms. Lee, a famous storybook writer, ______ to Molly's Bookstore to talk about her new book.\nMy two little kids just can't wait to see her.", options: ["came", "was coming", "has come", "is going to come"], correctIndex: 3, explanation: "can't wait (等不及) 暗示活動還沒開始。表示她『將要來』，表示未來確定的計畫，用 is going to come。" },
+                    { id: "q_t43", question: "Dad: Have you brushed your teeth yet?\nAnn: No, but I ______ before I go to bed.", options: ["haven't", "have", "won't", "will"], correctIndex: 3, explanation: "安說她現在還沒刷，但睡覺前『將會』去刷，未來要做的事用 will。" },
+                    { id: "q_t44", question: "______ that last piece of pie?\nIf not, can I have it?\nI didn't eat much this morning.", options: ["Had you eaten", "Were you eating", "Do you eat", "Are you going to eat"], correctIndex: 3, explanation: "問對方『你打算要吃那塊派嗎？』詢問對方的意願與計畫，選 Are you going to eat 比較自然！" }
+                ]
+            },
+            "there-be": {
+                id: "there-be",
+                title: "There is / There are 題組",
+                icon: <List className="w-6 h-6 text-purple-500" />,
+                color: "bg-purple-50 border-purple-200",
+                accent: "text-purple-600",
+                topics: [{ id: "t1", title: "存在句型" }, { id: "t2", title: "地方副詞" }],
+                questions: [
+                    { id: "q_th1", question: "Paul: What did you find under his desk?\nTom: Oh, ______ all kinds of things: a basketball, pencils, a hat, and fries!", options: ["there were", "it was", "it had", "there was"], correctIndex: 0, explanation: "things 是複數，而且問句用 did you find 是過去式，所以回答要有過去式的 There were。" },
+                    { id: "q_th2", question: "(In the teachers' office)\nMiss Huang: Sue, ______ students in the classroom?\nMiss Cheng: I don't think so.\nSchool's over.\nMiss Huang: But I hear people talking over there.", options: ["are they", "do they", "is there", "are there"], correctIndex: 3, explanation: "students (學生) 是複數，要問「有沒有學生」請用 Are there 喔！" },
+                    { id: "q_th3", question: "Jenny: How many countries ______ in Europe?\nBetty: I'm not sure.", options: ["is it", "is there", "are they", "are there"], correctIndex: 3, explanation: "countries 也是變複數了，「有多少個國家存在」就是問 Are there。" },
+                    { id: "q_th4", question: "Jack: There is going to ______ a dance show on Saturday.\nWould you like to go with me?\nNina: Sure.\nI can't wait for it.", options: ["be", "do", "get", "have"], correctIndex: 0, explanation: "There is going to 後面加原形動詞 be，翻譯為「將會有...」。" },
+                    { id: "q_th5", question: "Grace: How many pencils ______ in your pencil box?\nAllen: Only one.", options: ["are there", "are they", "is there", "is it"], correctIndex: 0, explanation: "pencils 加上了 s 變複數，所以要用 are there。" },
+                    { id: "q_th6", question: "______ will be a welcome party next week for the new students.\nWill you come with me?", options: ["It", "There", "They", "We"], correctIndex: 1, explanation: "There will be 就等於「未來將會有...」，是經典常見片語！" },
+                    { id: "q_th7", question: "Grace: How many people ______ in the office when the fire happened?\nHarry: Five.\nLuckily, nobody got hurt.", options: ["did they", "had they", "were there", "would there be"], correctIndex: 2, explanation: "因為後面寫著 fire happened (過去式)，是在問「當時」有幾個人，所以用過去式 were there 去問。" },
+                    { id: "q_th8", question: "Now we have to take a taxi home because ______ are no buses after eleven o'clock.", options: ["here", "there", "they", "we"], correctIndex: 1, explanation: "「那裡沒有公車了」，There are no... 代表「沒有存在...」。" },
+                    { id: "q_th9", question: "When I entered the house for the first time, I found ______ was a big round table in the living room.", options: ["it", "that", "there", "this"], correctIndex: 2, explanation: "前面 found 後面其實省略了一個 that。接下來是說客廳裡「有」一張圓桌，所以要用 there was。" },
+                    { id: "q_th10", question: "Somewhere along the road, ______ a shop which sells things from foreign countries.", options: ["that is", "it is", "it has", "there is"], correctIndex: 3, explanation: "「一間賣外國貨的店在那邊」表示它的存在，要用 There is。" },
+                    { id: "q_th11", question: "There ______ more than twenty clubs in our school.\nWhich one would you like to join?", options: ["has", "have", "is", "are"], correctIndex: 3, explanation: "超過二十個 clubs (複數)，要搭複數的 be 動詞 are 啦！" }
+                ]
+            },
+            "relatives": {
+                id: "relatives",
+                title: "關係代名詞",
+                icon: <GitBranch className="w-6 h-6 text-rose-500" />,
+                color: "bg-rose-50 border-rose-200",
+                accent: "text-rose-600",
+                topics: [{ id: "t1", title: "主格/受格關代" }],
+                questions: [
+                    { id: "q_r1", question: "Do you remember the girl ______ looked worried at the train station yesterday?", options: ["who", "where", "which", "what"], correctIndex: 0, explanation: "你在找的「女生 (girl)」是人！人當先行詞後面關代要用 who。" },
+                    { id: "q_r2", question: "Eva: What's your ideal mate like?\nAda: Well, I want a husband who ______ well.\nI enjoy eating, but I hate kitchen.", options: ["cook", "cooks", "cooking", "to cook"], correctIndex: 1, explanation: "前面的 husband 是單數老公。後面的動詞 cook 因為要跟著單數的 husband 變化，所以要加 s 變 cooks。" },
+                    { id: "q_r3", question: "James: Do you see the street vendor over there?\nPhilip: Which one?\nJames: The one ______ is wearing a hat.", options: ["it", "he", "who", "which"], correctIndex: 2, explanation: "The one 指的是前面說過的人(攤販)，既然是人，關代就用 who。" },
+                    { id: "q_r4", question: "I need someone ______ his work to take out the garbage.", options: ["finish", "finished", "has finished", "who has finished"], correctIndex: 3, explanation: "someone 是人，我們用 who 來指對方，而且 has finished 表示「已經完成」的人。" },
+                    { id: "q_r5", question: "Willy found ______ the novel he bought last week was under his bed.", options: ["that", "where", "whether", "which"], correctIndex: 0, explanation: "這題不是關代喔！這是 found that... (發現...這件事情)，這是一個名詞子句。" },
+                    { id: "q_r6", question: "The boys ______ are coming to my office tomorrow were my students five years ago.", options: ["who", "they", "those", "whose"], correctIndex: 0, explanation: "The boys 是一群男生，代表是人，後面直接選 who 準沒錯。" },
+                    { id: "q_r7", question: "The movie is about a true story ______ happened in Korea in 1945.", options: ["it", "that", "what", "when"], correctIndex: 1, explanation: "true story (真實故事) 是一件事不是人，不能用 who，可以使用 that 先頂替 which 來用！" },
+                    { id: "q_r8", question: "I like to read comic books ______ me laugh.", options: ["made", "to have made", "that make", "which makes"], correctIndex: 2, explanation: "comic books (漫畫書們) 是複數的物品！關代可以用 that 代替，而且後面的動詞不加 s，變成 that make。" },
+                    { id: "q_r9", question: "In my family, my sister is the only person who ______ chocolate.", options: ["love", "loves", "loved", "loving"], correctIndex: 1, explanation: "先行詞 the only person (唯一的那個人) 是單數，所以動詞 love 要加 s 變 loves。" },
+                    { id: "q_r10", question: "At dinner time, I often enjoy telling Mom everything ______ at school.", options: ["happened", "was happening", "that happened", "which happening"], correctIndex: 2, explanation: "一切事情 (everything) 最喜歡搭配 that 來當關代了，這幾乎是個固定招式！" },
+                    { id: "q_r11", question: "The woman you met in the library yesterday ______ our school a lot of books.", options: ["giving", "given", "to give", "gave"], correctIndex: 3, explanation: "這個句子的主角大動詞在後面，女人 (The woman)「給了 (gave)」學校很多書。你昨天在圖書館遇到她只是中間補充說明用的！" },
+                    { id: "q_r12", question: "The strange man I saw yesterday ______ around my house again.", options: ["walking", "is walking", "and walked", "to walk"], correctIndex: 1, explanation: "這個奇怪的男人「正在 (is walking)」我家附近走來走去，這才是整句話想表達的重點！" },
+                    { id: "q_r13", question: "\"Are you dating anyone special now?\" is a question that popular movie stars ______ in an interview.", options: ["to be often asked", "are often asked", "being often asked", "who are often asked"], correctIndex: 1, explanation: "電影明星們是被訪問的對象，所以他們是「被問 (are asked)」問題的人！" },
+                    { id: "q_r14", question: "All the excuses Nick made ______ a lot about how much he hates to do the job.", options: ["say", "saying", "which say", "to say"], correctIndex: 0, explanation: "尼克找的所有藉口 excuses 都是複數，代表「說出了 (say)」他有多討厭這工作，動詞不用加 s。" },
+                    { id: "q_r15", question: "Can anyone who knows the answer ______ it out loud?", options: ["say", "says", "saying", "to say"], correctIndex: 0, explanation: "這句開頭是 Can anyone... (任何人可以...)，因為有助動詞 Can 開頭，後面的動詞一定要被打回原形 say！" }
+                ]
+            },
+            "be-aux": {
+                id: "be-aux",
+                title: "be 動詞 vs 助動詞",
+                icon: <BookOpen className="w-6 h-6 text-blue-500" />,
+                color: "bg-blue-50 border-blue-200",
+                accent: "text-blue-600",
+                topics: [{ id: "t1", title: "Be動詞 vs Do助動詞" }],
+                questions: [
+                    { id: "q_ba1", question: "Why ______ Jerry and Lisa play cards with us?", options: ["don't", "isn't", "aren't", "doesn't"], correctIndex: 0, explanation: "play 是個一般動作(原形動詞)，Jerry 跟 Lisa 是兩個人(複數)，所以問句搭配助動詞 don't。" },
+                    { id: "q_ba2", question: "Jane always does well on English tests, but her sisters ______.", options: ["doesn't", "aren't", "don't", "didn't"], correctIndex: 2, explanation: "姐姐們 (sisters) 是複數，而且前面姊姊是肯定 does well，後方對比就要用否定 don't。" },
+                    { id: "q_ba3", question: "No, I don't, but my twin brother ______.", options: ["does", "do", "is", "are"], correctIndex: 0, explanation: "前面的問句有助動詞 don't，我就配合你，我的 brother 是單數，用肯定 does！" },
+                    { id: "q_ba4", question: "No, I didn't, but my brother ______.", options: ["does", "is", "did", "was"], correctIndex: 2, explanation: "前面說我沒有 (didn't)，但是我哥哥有！後面要轉成肯定的過去式 did。" },
+                    { id: "q_ba5", question: "Playing video games is fun, ______?", options: ["do they", "aren't they", "does it", "isn't it"], correctIndex: 3, explanation: "打電動前面是 is fun，後面要反過來變否定 isn't。主詞是一件事，用 it。" },
+                    { id: "q_ba6", question: "______ Shelly's father a businessman?", options: ["Are", "Is", "Do", "Does"], correctIndex: 1, explanation: "問身份「老爸是不是商人？」，老爸是單數的一個角色，我們用 is 來問。" },
+                    { id: "q_ba7", question: "Mom: What ______ after school today?\nRyan: Well, I just read some comic books.", options: ["did you do", "do you do", "are you doing", "will you do"], correctIndex: 0, explanation: "今天放學後你做了什麼？雖然有 today，因為放學時間已經過了事情發生完了，用過去式的助動詞 did you do 啦！" },
+                    { id: "q_ba8", question: "Ken's brothers like to watch tennis, but Ken ______.", options: ["is", "isn't", "does", "doesn't"], correctIndex: 3, explanation: "前面 like (一般動詞肯定)，but 代表相反，Ken 是單數所以用 doesn't (否定)。" },
+                    { id: "q_ba9", question: "______ the dog that bites people yours?", options: ["Can", "Does", "Has", "Is"], correctIndex: 3, explanation: "The dog is yours. 變成問句就是 Is the dog yours? (那隻狗是你的嗎)" },
+                    { id: "q_ba10", question: "When ______ she have PE class?", options: ["did", "does", "has", "is"], correctIndex: 1, explanation: "have 是上體育課的「上 (一般動作)」，碰到一般動詞，問句就要請出助動詞大哥 does 來幫忙！" },
+                    { id: "q_ba11", question: "Melody has... but her sister ______.", options: ["can't", "doesn't", "isn't", "won't"], correctIndex: 1, explanation: "前面 has an interest 代表有這個興趣(一般動詞)，相反的沒有當然是 doesn't 囉！" }
+                ]
+            },
+            "causative": {
+                id: "causative",
+                title: "使役動詞",
+                icon: <MousePointer2 className="w-6 h-6 text-orange-500" />,
+                color: "bg-orange-50 border-orange-200",
+                accent: "text-orange-600",
+                topics: [{ id: "t1", title: "Make/Have/Let" }],
+                questions: [
+                    { id: "q_c1", question: "Mrs. Wilson ______ her son wash the dishes after dinner.", options: ["had", "told", "wanted", "invited"], correctIndex: 0, explanation: "使役動詞用法：had 開頭就是「叫、使」，不管怎樣後面都接不加 to 的原形動詞 wash！其它三個通常要加 to 喔。" },
+                    { id: "q_c2", question: "The teachers make us ______ harder by giving us tests.", options: ["study", "studied", "to study", "studying"], correctIndex: 0, explanation: "make (強迫/使某人) 後面不管三七二十一，直接選原形動詞 study！" },
+                    { id: "q_c3", question: "The teacher ______ his students vacuum the floor of the classroom after the party.", options: ["asked", "wanted", "found", "had"], correctIndex: 3, explanation: "had 這裡翻譯為「讓/叫」，只要是這個字當使役動詞，後面學生打掃 classroom 就用原形動詞 vacuum！" },
+                    { id: "q_c4", question: "Mother makes me ______ my homework every day before I can play video games.", options: ["finish", "finished", "finishing", "to finish"], correctIndex: 0, explanation: "媽媽「逼」我 (makes me)，使役動詞來了！接原形 finish 就對惹！" },
+                    { id: "q_c5", question: "Jenny plays the piano very well.\nHer mother makes her ______ two hours every day.", options: ["practice", "practiced", "practicing", "to practice"], correctIndex: 0, explanation: "makes 這個使役動詞，後面就是要讓女兒乖乖「加上原形」： practice！" },
+                    { id: "q_c6", question: "My mother ______ me send a letter yesterday.", options: ["asked", "had", "told", "wanted"], correctIndex: 1, explanation: "前面是要選出使役動詞。只有 had (讓/叫) 能搭配後面原形的 send 喔！" },
+                    { id: "q_c7", question: "If I finish my homework before eight o'clock, my parents will let me ______ TV for one hour.", options: ["watch", "watching", "to watch", "have watched"], correctIndex: 0, explanation: "let (讓) 這個就是最好記的使役動詞了，後面看電視直接放原形 watch。" },
+                    { id: "q_c8", question: "Working all day on the computer makes my eyes really ______.", options: ["bored", "hard", "slow", "tired"], correctIndex: 3, explanation: "這裡考另一種 make 的寫法：make + 人 + 狀態 (形容詞)。讓眼睛覺得很「累」，選 tired。" },
+                    { id: "q_c9", question: "Deborah put some sugar and cream in her coffee to make it ______ better.", options: ["taste", "tasted", "tasting", "to taste"], correctIndex: 0, explanation: "加糖跟奶油讓咖啡「變好喝」，make 後面嘗起來 taste 給他選原形動詞！" },
+                    { id: "q_c10", question: "Nancy does not like to spend time taking out the garbage.\nShe always has her brother ______ it for her.", options: ["do", "does", "did", "done"], correctIndex: 0, explanation: "她總是請哥哥代勞：has her brother...。使役動詞 has，所以哥哥倒垃圾的動作要選原形 do。" },
+                ]
+            },
+            "perception": {
+                id: "perception",
+                title: "感官動詞",
+                icon: <Eye className="w-6 h-6 text-sky-500" />,
+                color: "bg-sky-50 border-sky-200",
+                accent: "text-sky-600",
+                topics: [{ id: "t1", title: "See/Hear/Watch + V/Ving" }],
+                questions: [
+                    { id: "q_pe1", question: "Bruce: When did Roger change his job?\nLaura: He hasn't changed his job.\nHe still works in the same computer store.\nBruce: But I saw him ______ watches on the street corner.", options: ["sold", "to sell", "have sold", "selling"], correctIndex: 3, explanation: "感官動詞 see 看到 somebody 正在做某事，後面可以配 V-ing，代表「當下正好看著他正在賣 (selling)」！" },
+                    { id: "q_pe2", question: "Cindy cried out when she saw a motorcycle ______ into her cat.", options: ["bump", "bumped", "to bump", "has bumped"], correctIndex: 0, explanation: "這個 saw (看到) 是感官動詞，機車撞上貓是一個瞬間或全程短動作的事實，可以直接用原形 bump。" },
+                    { id: "q_pe3", question: "Mike: When did Laura become a taxi driver?\nJerry: She is NOT a taxi driver.\nShe's a nurse.\nMike: But I saw her ______ a taxi yesterday!\nJerry: Oh, maybe it was her younger sister!", options: ["driving", "drove", "to drive", "have driven"], correctIndex: 0, explanation: "剛好瞄到她「正在」開車！感官動詞後面碰到這種強調當下的狀態就選 Ving：driving。" },
+                    { id: "q_pe4", question: "When I was walking along the river, I saw some fish ______ out of the water.", options: ["jumped", "to jump", "jumping", "are jumping"], correctIndex: 2, explanation: "沿著河邊散步時，看到魚「不斷在」跳，有持續畫面的感覺，選 jumping！" },
+                    { id: "q_pe5", question: "The little boy jumped up and down happily when he saw a bee ______ into the house.", options: ["flown", "to fly", "flying", "has flown"], correctIndex: 2, explanation: "小男孩看到蜜蜂「正在飛進來」。感官動詞見到這個過程畫面，Ving 上場也就是 flying！" },
+                    { id: "q_pe6", question: "See?\nThe strange man I saw yesterday ______ around my house again.", options: ["walking", "is walking", "and walked", "to walk"], correctIndex: 1, explanation: "昨天我看到的怪人，現在又「正在 (is walking)」附近走了。不要被 saw 騙了，這句真正的主角動詞在後面喔！" },
+                    { id: "q_pe7", question: "My cat got excited when it saw the boy ______ the birds.", options: ["catches", "catching", "to catch", "caught"], correctIndex: 1, explanation: "貓看到那個男孩「正在」抓鳥。感官動詞(saw) + 受詞 + 正在做... 所以是 Ving 的 catching！" }
+                ]
+            },
+            "spend-take-cost": {
+                id: "spend-take-cost",
+                title: "三花運動詞 (Spend/Take/Cost)",
+                icon: <Scale className="w-6 h-6 text-teal-500" />,
+                color: "bg-teal-50 border-teal-200",
+                accent: "text-teal-600",
+                topics: [{ id: "t1", title: "Spend/Take/Cost 用法" }],
+                questions: [
+                    { id: "q_stc1", question: "There's a subway station near my house. ______ takes me only ten minutes to get to my office.", options: ["It", "There", "The one", "The station"], correctIndex: 0, explanation: "花費時間如果用 It 開頭作主詞，後面必須要接 take(s) + 人 + 時間 這款句型！" },
+                    { id: "q_stc2", question: "My dog hates to take a bath.\nIt usually ______ me one hour to make him clean.", options: ["needs", "spends", "takes", "uses"], correctIndex: 2, explanation: "一樣是 It 開頭講時間花費，永遠的死黨就是 takes！" },
+                    { id: "q_stc3", question: "Studying in a foreign country ______ me a lot of money.\nThat's why I had to sell my apartment.", options: ["cost", "lost", "made", "spent"], correctIndex: 0, explanation: "「事物」花掉人多少「錢」，要用 cost 這個字！ (某事 cost 某人 金錢)" },
+                    { id: "q_stc4", question: "It's ______ me a lot of time to find out what I really want to do in the future.", options: ["paying", "spending", "taking", "using"], correctIndex: 2, explanation: "開頭又看到 It is，雖然有 is 變現在進行式，但遇到時間花費依然是搭配 taking 啦。" },
+                    { id: "q_stc5", question: "Charles ______ a day in the department store looking for a hat for his wife.", options: ["cost", "spent", "saw", "made"], correctIndex: 1, explanation: "這句人 (Charles) 當主詞，花了時間，就要用 spent。口訣：人 + spend + 時間/金錢。" },
+                    { id: "q_stc6", question: "It took the police lots of time ______ who entered Liu's house and killed her one year ago.", options: ["and found out", "find out", "finding out", "to find out"], correctIndex: 3, explanation: "前面是用 it took ... (花了多少時間)。固定套路，這句最後面要做什麼事前面要有 to：to find out。" }
+                ]
+            },
+            "wh-words": {
+                id: "wh-words",
+                title: "疑問詞",
+                icon: <HelpCircle className="w-6 h-6 text-indigo-500" />,
+                color: "bg-indigo-50 border-indigo-200",
+                accent: "text-indigo-600",
+                topics: [{ id: "t1", title: "疑問詞綜合" }],
+                questions: [
+                    { id: "q_wh1", question: "______ are your children?\nTed is five.\nPeter is eight.", options: ["How", "How old", "How long", "How much"], correctIndex: 1, explanation: "因為回答是五歲跟八歲呀！既然問年紀那就一定是 How old。" },
+                    { id: "q_wh2", question: "Mom, ______ are my glasses?\nAren't they on the table...?", options: ["what", "when", "where", "how"], correctIndex: 2, explanation: "回答說：不是在桌上嗎？可以看得出來在問眼鏡放『哪裡』，用 where。" },
+                    { id: "q_wh3", question: "Where are the boys playing? ______.", options: ["After school", "Under the tree", "On Sunday", "To the park"], correctIndex: 1, explanation: "題目問男朋友們在哪裡玩 (Where)，選項裡只有解答「在樹下 (Under the tree)」才算是一個地點。" },
+                    { id: "q_wh4", question: "How often do you wash your hair? ______.", options: ["One day", "Twice a week", "Since yesterday", "Three days ago"], correctIndex: 1, explanation: "How often 是在問你從事某個活動的『頻率』，回答一週兩次 (Twice a week) 最搭。" },
+                    { id: "q_wh5", question: "Have you ever been to Hong Kong?\nYes, ______.", options: ["five days", "for three years", "in one month", "twice already"], correctIndex: 3, explanation: "問有沒有『去過的經驗』，回答說兩次了 (twice already)！" },
+                    { id: "q_wh6", question: "______ is Ted doing in the kitchen?\nHe's cooking dinner for us.", options: ["What", "Where", "Who", "Why"], correctIndex: 0, explanation: "問『做什麼 (What)』才會回答『他正在幫我們煮飯呀』！" },
+                    { id: "q_wh7", question: "______ do you practice playing the piano?\nWhen my mom is at home...", options: ["How about", "How long", "How much", "How often"], correctIndex: 3, explanation: "回答『當媽媽不在家的時候...(抓緊時機)』，代表人家是在問你練琴的頻率/時機，選 How often 最適合。" },
+                    { id: "q_wh8", question: "______ are the children?\nThey're having fun in the playground.", options: ["Who", "What", "When", "Where"], correctIndex: 3, explanation: "回答他們人在遊樂場，問句一定是找『哪裡』的 Where。" },
+                    { id: "q_wh9", question: "How often does your brother wash his car? ______.", options: ["Since yesterday", "Two days ago", "One hour", "Every day"], correctIndex: 3, explanation: "How often 問洗車的「頻率」有幾次，回答「每天 (Every day)」無違和！" },
+                    { id: "q_wh10", question: "______ does your little sister get up?\nAbout six.", options: ["How often", "How old", "What day", "What time"], correctIndex: 3, explanation: "回答大約六點醒來，問具體時刻就是 What time。" },
+                    { id: "q_wh11", question: "Do you know ______ you have talked on the phone? 30 minutes!", options: ["how old", "how often", "how many", "how long"], correctIndex: 3, explanation: "電話講了 30 分鐘，這叫時間的「長度」，要用 How long 來發問。" },
+                    { id: "q_wh12", question: "______ sweater looks better on me, the red one or the blue one?", options: ["Which", "How", "Where", "What"], correctIndex: 0, explanation: "哪一件毛衣比較好看，紅的還是藍的？這種有提供選項讓你挑的，一定要用 Which (哪一個)。" },
+                    { id: "q_wh13", question: "It was an exciting moment for Mr. and Mrs. Wang ______ they learned that they were going to have a baby.", options: ["what", "when", "whether", "why"], correctIndex: 1, explanation: "『當 (When)』王太太夫妻兩人得知要生寶寶的時候，這是個令人興奮的時刻！" },
+                    { id: "q_wh14", question: "______ umbrella is it?\nIt's Ann's.", options: ["What", "Where", "Which", "Whose"], correctIndex: 3, explanation: "回答「這是安的傘」，代表問的是這把雨傘是「誰的」 (Whose)。" },
+                    { id: "q_wh15", question: "______ your French class, Jerry?\nI couldn't understand...", options: ["How's", "What's", "When is", "Which is"], correctIndex: 0, explanation: "『你的法文課上得如何？(How is)』，聽起來就像 How's your French class。" },
+                    { id: "q_wh16", question: "______ were you there?\nFor two weeks.", options: ["How long", "How often", "How soon", "What time"], correctIndex: 0, explanation: "因為回答是待了兩個禮拜 (For two weeks)，詢問時間的持續長度選 How long！" },
+                    { id: "q_wh17", question: "______ is a boat ticket for children?\nIt's free...", options: ["How long", "How much", "How often", "How soon"], correctIndex: 1, explanation: "It's free! 是在回答價錢免費，那當初一定是問「多少錢」How much 囉！" },
+                    { id: "q_wh18", question: "______?\nIt's three thirty.", options: ["How much money...", "What day...", "When does...", "What time is it"], correctIndex: 3, explanation: "看到時間回答三點半，這個送分題當然是選現在幾點 What time is it 啦！" },
+                    { id: "q_wh19", question: "Do you know ______ the famous writer was born?\nIn Taitung, a beautiful city in eastern Taiwan.", options: ["how", "when", "where", "whether"], correctIndex: 2, explanation: "回答「在台東」，這是一個地點，所以當時一定是問他「在哪裡出生」Where。" },
+                    { id: "q_wh20", question: "Did the teacher tell us ______ to get to the station?\nYes.\nShe said we could take bus 284 or 232 and meet there at nine.", options: ["how", "what", "when", "where"], correctIndex: 0, explanation: "如何到達車站呢？這種用方法抵達的事叫做「How to get...」。" },
+                    { id: "q_wh21", question: "______ did Carson say he would see you tomorrow?\nWe're going out for a picnic.", options: ["What", "When", "Where", "Why"], correctIndex: 3, explanation: "因為回答解答了去野餐的原因，所以原本一定是在問「為什麼」Why 會想去那裡。" },
+                    { id: "q_wh22", question: "No one knows ______.\nThey often fight with each other.", options: ["why", "where", "when", "how"], correctIndex: 0, explanation: "前面說「沒人知道為什麼」，後面說因為他們老是在吵架。當然是用 Why 啦！" },
+                    { id: "q_wh23", question: "Do you know ______ Grandma is going to visit us?\nIt's next week.", options: ["where", "when", "whether", "why"], correctIndex: 1, explanation: "奶奶什麼時候要來啊？因為回答是「下星期」，所以問的是時間 When 喔！" },
+                    { id: "q_wh24", question: "Have you decided ______ you will celebrate your 30th birthday?\nYeah, I'm going to have a big barbecue party.", options: ["how", "where", "what", "when"], correctIndex: 0, explanation: "因為回答說「喔，我要辦一個大烤肉派對」，這是「慶祝的方式」，所以要問 How (如何)。" }
+                ]
+            },
+            "tag-questions": {
+                id: "tag-questions",
+                title: "附加問句",
+                icon: <MessageCircle className="w-6 h-6 text-pink-500" />,
+                color: "bg-pink-50 border-pink-200",
+                accent: "text-pink-600",
+                topics: [{ id: "t1", title: "附加問句練習" }],
+                questions: [
+                    { id: "q_tag1", question: "Bus Number 286 goes there, ______?", options: ["does it", "doesn't it", "is it", "isn't it"], correctIndex: 1, explanation: "goes 是一般動詞現在式，肯定句後面要轉成否定，所以用 doesn't it 啦！" },
+                    { id: "q_tag2", question: "You have to get up early tomorrow, ______?", options: ["can't you", "don't you", "aren't you", "haven't you"], correctIndex: 1, explanation: "have to 的 have 在這邊算是普通動詞不是完成式，前面肯定就用附加問句 don't you！" },
+                    { id: "q_tag3", question: "Hello.\nExcuse me... is that tall boy your brother?\nYes, ______.", options: ["it is", "he is", "that is", "you are"], correctIndex: 1, explanation: "問的是那個男孩(boy)，他是男的，代名詞就是 he，句子是肯定回答就搭配 he is。" },
+                    { id: "q_tag4", question: "You've studied English for a long time, ______?", options: ["did you", "didn't you", "have", "haven't you"], correctIndex: 3, explanation: "前面看到 You've 其實就是 You have，前面肯定後面否定，一秒選 haven't you。" },
+                    { id: "q_tag5", question: "She's going to Europe, ______ she?", options: ["doesn't", "hasn't", "isn't", "won't"], correctIndex: 2, explanation: "前面是 She's (She is)，這是一個肯定句。那後面當然就是否定的 isn't she 囉。" },
+                    { id: "q_tag6", question: "You didn't lend him the money, ______?", options: ["would you", "wouldn't you", "did you", "didn't you"], correctIndex: 2, explanation: "這個簡單！前面已經是否定 (didn't)，反過來到尾巴就是要變成肯定的 did you。" },
+                    { id: "q_tag7", question: "They love each other, ______?", options: ["will they", "won't they", "do they", "don't they"], correctIndex: 3, explanation: "love 是一般動詞肯定。反過來到後面，因為 They 是複數，就要改成 don't they 放後面。" },
+                    { id: "q_tag8", question: "The tall man over there is our new English teacher, ______?", options: ["is he", "is there", "isn't he", "isn't there"], correctIndex: 2, explanation: "前面的動詞是 is (肯定)，所以後面就變成 isn't，而且男人是男生（he），就選 isn't he。" },
+                    { id: "q_tag9", question: "Alice really likes having noodles for breakfast, ______?", options: ["doesn't she", "is she", "hasn't she", "did she"], correctIndex: 0, explanation: "likes 後面有加 s 就是一般動詞肯定，所以到後面的問句就改搭配 doesnt，Alice 是女生所以加個 she。" },
+                    { id: "q_tag10", question: "Mr. Wang: Shelly's in the nurse's office, ______?\nMiss Lin: Yes, she is.\nShe's catching a bad cold today.", options: ["wasn't she", "isn't she", "hasn't she", "didn't she"], correctIndex: 1, explanation: "王先生問，Shelly 正在健康中心，對嗎 (is => isn't she)? 護理師說對啊她感冒了。所以這題填 isn't she。" }
+                ]
+            },
+            "conjunctions": {
+                id: "conjunctions",
+                title: "連接詞",
+                icon: <Layers className="w-6 h-6 text-cyan-500" />,
+                color: "bg-cyan-50 border-cyan-200",
+                accent: "text-cyan-600",
+                topics: [{ id: "t1", title: "連接詞綜合" }],
+                questions: [
+                    { id: "q_con1", question: "It was very hot..., ______ we still had a good time there.", options: ["or", "so", "but", "because"], correctIndex: 2, explanation: "非常熱...「但是」我們還是玩得很開心！前面看起來很慘，後面卻很好，就用 but 轉折。" },
+                    { id: "q_con2", question: "We not only visited the park ______ took a hot-spring bath.", options: ["by the way", "but also", "after", "and"], correctIndex: 1, explanation: "超實用句型來了：not only... but also...！翻譯成『我們不但去了公園，也洗了溫泉！』" },
+                    { id: "q_con3", question: "A-hong can speak two foreign languages, ______ his brothers can't.", options: ["but", "or", "so", "then"], correctIndex: 0, explanation: "阿宏會講兩種外語，兄弟卻「不會」。前後成對比相反狀態，選 but 啦。" },
+                    { id: "q_con4", question: "Da-fa is cleaning the house ______ some of his friends are coming.", options: ["because", "but", "if", "so"], correctIndex: 0, explanation: "為什麼他在打掃啊？「因為」朋友要來呀！前後講原因用 because 超好懂。" },
+                    { id: "q_con5", question: "Mr. Green was very angry... ______ she always put her dirty socks on the table.", options: ["although", "because", "but", "until"], correctIndex: 1, explanation: "為什麼格林先生很生氣？「因為」她把髒襪子放桌上。因果關係因為是 because。" },
+                    { id: "q_con6", question: "______ Joe looks strong, in fact he gets sick easily.", options: ["Because", "If", "Though", "When"], correctIndex: 2, explanation: "雖然 Joe 看起來這傢伙很壯，「但是」其實他很容易生病。前面放個 Though (雖然) 剛剛好！" },
+                    { id: "q_con7", question: "Enya got up early... ______ she did not want to be late.", options: ["if", "but", "though", "because"], correctIndex: 3, explanation: "Enya 早起... 是「因為」她不想遲到。說明理由用 because。" },
+                    { id: "q_con8", question: "Elsa hates going shopping, ______ she went last night...", options: ["because", "but", "if", "so"], correctIndex: 1, explanation: "Elsa 是個恨透了逛街的女子，「但是」昨晚她還是去逛了。口是心非要加用 but 啦～" },
+                    { id: "q_con9", question: "Mr. Hu speaks good English ______ he lived in the U.S. for many years.", options: ["because", "but", "so", "whether"], correctIndex: 0, explanation: "胡先生把英文講這麼好是「因為」他在美國住過好幾年。原因擺明要放 because。" },
+                    { id: "q_con10", question: "______ going shopping, Dad asked me if Mom would eat at home.", options: ["Without", "Until", "By", "Before"], correctIndex: 3, explanation: "爸爸是在我們去逛街這件事「發生前」先問媽媽會不會在家吃飯。選 Before。" },
+                    { id: "q_con11", question: "I'm not sure ______ the road to the mountains will be closed.", options: ["how", "what", "whether", "why"], correctIndex: 2, explanation: "我不確定往山上的的路「會不會/是否」被封住。翻譯成是否的話就選 whether 喔！" },
+                    { id: "q_con12", question: "I can't find my history book, ______ I know it's somewhere in the living room.", options: ["because", "but", "since", "until"], correctIndex: 1, explanation: "我找不到歷史課本拉，「但是(but)」我知道它應該還在客廳的某個角落。" },
+                    { id: "q_con13", question: "I ______ a bath when someone turned off the light.", options: ["was taking", "took", "am taking", "had taken"], correctIndex: 0, explanation: "燈突然被關掉時，我「正在洗澡」，過去進行式聽起來超慘 was taking。" },
+                    { id: "q_con14", question: "last day to buy tickets..., ______ I must go.", options: ["if", "or", "so", "though"], correctIndex: 2, explanation: "這是買票的最後一天，「所以 (so)」我一定要去啦！" },
+                    { id: "q_con15", question: "______ Annie knows fast food is not good..., she still eats it.", options: ["Although", "Because", "If", "When"], correctIndex: 0, explanation: "「雖然 (Although)」安妮知道速食不好，但她就是還是要吃！" },
+                    { id: "q_con16", question: "I have to catch the bus right now, ______ I'll miss my brother's birthday party.", options: ["and", "because", "or", "until"], correctIndex: 2, explanation: "我現在得趕快去搭公車了，「否則 (or)」就會錯過生日派對！" },
+                    { id: "q_con17", question: "if he ______ this morning, I'll tell him...", options: ["will come in", "comes in", "has come in", "came in"], correctIndex: 1, explanation: "『如果』這種條件裡面，可以用現在式代未來式喔，他今天早上要是出現了(comes in)，我就會...。" },
+                    { id: "q_con18", question: "This dress is pretty, ______ it does not look good on me.", options: ["so", "but", "or", "if"], correctIndex: 1, explanation: "這件衣服超好看的，「但是 (but)」穿在我身上就是怪。心痛轉折選 but。" },
+                    { id: "q_con19", question: "My sister wants to buy a car ______ she doesn't have enough money.", options: ["because", "but", "if", "or"], correctIndex: 1, explanation: "我妹想買一輛車...「但是 (but)」她根本沒錢！窮酸的轉折，選 you guessed it, but。" },
+                    { id: "q_con20", question: "I've wanted to read... ______ today I finally borrowed...", options: ["and", "since", "so", "until"], correctIndex: 0, explanation: "我一直很想看這本書，「而且終於 (and)」今天借到了。順順地接下去講就用 and。" },
+                    { id: "q_con21", question: "usually gives us a lot of homework, ______ she didn't give us any today.", options: ["but", "if", "or", "so"], correctIndex: 0, explanation: "她老是給超多功課的，「但 (but)」今天佛心來的居然沒給！" },
+                    { id: "q_con22", question: "Mozart ______ his first music when he was only six.", options: ["is writing", "has written", "will write", "wrote"], correctIndex: 3, explanation: "在六歲時寫了他人生的第一首曲子，在過去發生的事實用過去式 wrote 喔！" },
+                    { id: "q_con23", question: "Josh has planned to make a trip... and ______ some of his friends.", options: ["visit", "visits", "visiting", "visited"], correctIndex: 0, explanation: "Josh 計畫去旅行... 「而且拜訪」朋友。前面 to make 之後 and 後面跟著直接原形 visit！" },
+                    { id: "q_con24", question: "I knew that George could play the flute, ______ I didn't know he was so good.", options: ["because", "but", "if", "so"], correctIndex: 1, explanation: "這傢伙真的會吹長笛啊，「但 (but)」我還真不知道他原來這麼強！" },
+                    { id: "q_con25", question: "I don't know ______ I should bring an umbrella.", options: ["how", "what", "where", "whether"], correctIndex: 3, explanation: "這天氣實在搞不懂，「是否 (whether)」我該乖乖帶把傘呢。" }
+                ]
+            },
+            "used-to": {
+                id: "used-to",
+                title: "used to",
+                icon: <Calendar className="w-6 h-6 text-slate-500" />,
+                color: "bg-slate-50 border-slate-200",
+                accent: "text-slate-600",
+                topics: [{ id: "t1", title: "used to 用法" }],
+                questions: [
+                    { id: "q_ut1", question: "My husband ______ send me flowers every week before...\nBut now he never does.", options: ["should", "used to", "was going to", "was afraid to"], correctIndex: 1, explanation: "老公『以前習慣』每週送花，現在都不送了... used to 這個詞專門用來講以前過去的習慣。" },
+                    { id: "q_ut2", question: "He ______ get up early to do exercise.\nBut now he wakes up late.", options: ["forgot to", "hated to", "used to", "volunteered to"], correctIndex: 2, explanation: "他『以前曾經』會早起運動，但往事不堪回首現在都晚起。專情於過去就是 used to 啦。" },
+                    { id: "q_ut3", question: "In my school days, I ______ to English radio programs every day.", options: ["listen", "have listened", "used to listen", "was listening"], correctIndex: 2, explanation: "在學校的年代嘛，我『過去很習慣聽 (used to listen)』英文廣播，回憶都是 used to v！" }
+                ]
+            },
+            "pronouns": {
+                id: "pronouns",
+                title: "代名詞",
+                icon: <User className="w-6 h-6 text-lime-500" />,
+                color: "bg-lime-50 border-lime-200",
+                accent: "text-lime-600",
+                topics: [{ id: "t1", title: "代名詞/反身代名詞" }],
+                questions: [
+                    { id: "q_p1", question: "Have you seen my comic books? ______ on your desk yesterday.", options: ["They are", "They had", "They were", "They've been"], correctIndex: 2, explanation: "書是複數 (Books) 而且時間點是昨天 (yesterday) ，過去時間加上複數就得用 They were 喔。" },
+                    { id: "q_p2", question: "We took ______ to a restaurant and had a big dinner.", options: ["me", "him", "her", "you"], correctIndex: 2, explanation: "帶『女兒(她)』去餐廳，受詞位置要放這個「她」的受格... 沒錯就是 her。" },
+                    { id: "q_p3", question: "John and Susan gave ______ a nice jacket.", options: ["I", "me", "mine", "myself"], correctIndex: 1, explanation: "強跟蘇珊給我一件外套，給我外套的我是受詞嘛，請選受格 me。" },
+                    { id: "q_p4", question: "Mary got two dolls..., and she liked ______ very much.", options: ["her", "it", "ones", "them"], correctIndex: 3, explanation: "因為娃娃 (dolls) 很多隻是複數，瑪莉超喜歡『它們』，複數代名詞請給 them。" },
+                    { id: "q_p5", question: "I love ______.\nThey're beautiful.", options: ["they", "them", "their", "theirs"], correctIndex: 1, explanation: "我超愛『它們 (明信片 postcards，複數)』！把它們擺在喜歡(love)後面，就是 them。" },
+                    { id: "q_p6", question: "Spring is a wonderful season because ______ is usually warm.", options: ["which", "this", "one", "it"], correctIndex: 3, explanation: "提到天氣啊季節的，常常開局就很直接來一個代名詞 It！" },
+                    { id: "q_p7", question: "I didn't buy it.\nI made it ______!", options: ["for me", "to me", "mine", "myself"], correctIndex: 3, explanation: "這東西不是我買的，都是我「自己」做出來的呀！強調靠自己的反身代名詞 myself。" },
+                    { id: "q_p8", question: "No, I don't know any of ______.", options: ["they", "their", "theirs", "them"], correctIndex: 3, explanation: "我不認識他們其中的任何一個... any of 後面遇到他們要換受格 them！" },
+                    { id: "q_p9", question: "______ of the gift boxes are already put under the tree.", options: ["One", "Any", "All", "Much"], correctIndex: 2, explanation: "句子裡的 are 代表數量不只一個嘛，所以答案中只有 All (所有的) 可以對上 are。" },
+                    { id: "q_p10", question: "If you wear a hat like ______, you won't feel cold.", options: ["I", "myself", "one", "this"], correctIndex: 3, explanation: "如果你戴的帽子長得像『這頂 (this)』，就一點都不冷！像 this 這個用法很好記！" },
+                    { id: "q_p11", question: "Hope we can see ______ today.", options: ["another", "others", "some", "themselves"], correctIndex: 2, explanation: "希望今天還能看到『一些 (猴子)』，表示這群猴子中的一點點，用 some。" },
+                    { id: "q_p12", question: "every person in my family has ______.", options: ["it", "one", "them", "those"], correctIndex: 1, explanation: "我家裡面幾乎每個人都有一支手機啊。既然指『一支』那就順理成章用 one。" },
+                    { id: "q_p13", question: "so ______ always full of people.", options: ["it is", "they are", "there is", "there are"], correctIndex: 0, explanation: "餐廳 (單數) 為什麼總是客滿。代名詞就用 it，配上 it is 就好！" },
+                    { id: "q_p14", question: "You can see ______ in her notebooks...", options: ["one", "others", "them", "which"], correctIndex: 2, explanation: "你在筆記本能看見滿滿的蘋果 (Apples)，把它們變複數拿過來放就成 them 惹。" },
+                    { id: "q_p15", question: "white earring on one ear and a gray earring on ______.", options: ["another", "the next", "the other", "the second"], correctIndex: 2, explanation: "一隻耳朵有一邊... 當只有兩樣東西其中還有另一件要講的時候，固定用法叫做 one... the other。" },
+                    { id: "q_p16", question: "I bought ______ last week.", options: ["it", "one", "ones", "them"], correctIndex: 0, explanation: "因為就是同一件超美的紅洋裝，當然就要用 it 稱呼它啦！" },
+                    { id: "q_p17", question: "The one on the corner sells bread, but ______ doesn't.", options: ["another", "that", "the next", "the other"], correctIndex: 3, explanation: "街上就兩間超市大對決：一間叫做 one ... 那另一間也就是『剩下的那間』 the other 啦。" },
+                    { id: "q_p18", question: "Michelle Walden, ______ of the best basketball players...", options: ["any", "each", "one", "who"], correctIndex: 2, explanation: "成為... 裡面最頂級的『其中之一』，one of the best 這種組合可以說是學測會考必出現的啊！" },
+                    { id: "q_p19", question: "They're not ______.", options: ["me", "mine", "my", "myself"], correctIndex: 1, explanation: "它們不是我的(襪子)！所有格的代名詞 mine 這個字，就等於說 my socks 短小精悍的寫法！" },
+                    { id: "q_p20", question: "Are there any good ______ this week?", options: ["ones", "others", "them", "those"], correctIndex: 0, explanation: "有沒有什麼好看的電影們啊？good 加上複數名詞，找 ones 當替身就對了！" },
+                    { id: "q_p21", question: "Can you show me ______ one?", options: ["the others", "other", "either", "another"], correctIndex: 3, explanation: "除了現在展示的這隻之外... 你還能拿『隨便另一支 (another)』給我瞧瞧嗎？" },
+                    { id: "q_p22", question: "bought ______ bread in the supermarket", options: ["many", "some", "any", "one"], correctIndex: 1, explanation: "肯定句買了「一些」麵包，這幾乎不加思索要放入 some。 (否定才是 any 喔！)" },
+                    { id: "q_p23", question: "One enjoys baking; ______ enjoys taking pictures.", options: ["another", "the next", "the other", "the second"], correctIndex: 2, explanation: "父母總共兩個人，老爸喜歡這個、老媽喜歡這個... 兩個的分別就請出 One... the other 的固定組合！" },
+                    { id: "q_p24", question: "My mom told me to take care of ______.", options: ["me", "myself", "her", "herself"], correctIndex: 1, explanation: "老媽叫我要好好照顧『我自己』... 反身代名詞這時就用 myself 吧！" },
+                    { id: "q_p25", question: "______ look(s) very boring.", options: ["it", "one", "some", "they"], correctIndex: 3, explanation: "這堆書 (Books) 看起來真的是複數的有夠無聊，代名詞把它抓出來當然是 they 囉。" },
+                    { id: "q_p26", question: "because ______ filled with toy cars.", options: ["it is", "they are", "there is", "there are"], correctIndex: 0, explanation: "因為前面的袋子 (Bag) 只有一個單數，所以是「它」塞滿了車子：it is。" },
+                    { id: "q_p27", question: "but I like to watch TV at home by ______.", options: ["I", "me", "myself", "mine"], correctIndex: 2, explanation: "我就是喜歡一個人在家不被吵！自己獨自一人的片語 by myself 必考必背啊！" }
+                ]
+            },
+            "possessives": {
+                id: "possessives",
+                title: "所有格與所有格受詞",
+                icon: <User className="w-6 h-6 text-emerald-500" />,
+                color: "bg-emerald-50 border-emerald-200",
+                accent: "text-emerald-600",
+                topics: [{ id: "t1", title: "所有格用法" }],
+                questions: [
+                    { id: "q_po1", question: "My sister thinks red hair is ______ fashionable than black hair.", options: ["very", "much", "more", "the most"], correctIndex: 2, explanation: "因為有 than (大於)，我們就要把比較級搬出來！比較時髦 = more fashionable。" },
+                    { id: "q_po2", question: "Yes, it's ______.\nMy daughter loves going there.", options: ["his", "hers", "ours", "theirs"], correctIndex: 3, explanation: "這個是陳氏夫婦的。講「他們的」東西，有一個代碼：theirs。" },
+                    { id: "q_po3", question: "Don't you have ______?", options: ["you", "your", "yours", "you're"], correctIndex: 2, explanation: "你難道沒有帶「你的東西(功課)」嗎？ yours 代表 your homework 。" },
+                    { id: "q_po4", question: "Is the one on Jack's desk ______?", options: ["mine", "ours", "theirs", "yours"], correctIndex: 3, explanation: "傑克桌上「這個東西」 是屬於「你的」(yours) 嗎？" },
+                    { id: "q_po5", question: "The book under Mary's desk is ______.", options: ["us", "me", "my", "mine"], correctIndex: 3, explanation: "瑪莉桌底下那本書是我的！把「我的(書)」縮寫成一個字就用 mine。" }
+                ]
+            },
+            "comparatives": {
+                id: "comparatives",
+                title: "比較級與最高級",
+                icon: <Trophy className="w-6 h-6 text-amber-500" />,
+                color: "bg-amber-50 border-amber-200",
+                accent: "text-amber-600",
+                topics: [{ id: "t1", title: "比較級/最高級" }],
+                questions: [
+                    { id: "q_com1", question: "Both my sons are already ______ than I am.", options: ["tall", "taller", "tallest", "the tallest"], correctIndex: 1, explanation: "看到這個 than 大大的字，就是要做比較啦，乖乖選比較級的 taller 更高吧！" },
+                    { id: "q_com2", question: "John felt much better ______ he took the medicine.", options: ["if", "so", "than", "after"], correctIndex: 3, explanation: "吃完藥『之後』就好多啦。這題主要看句子意思挑對連接詞 after。" },
+                    { id: "q_com3", question: "I cannot think of anyone with a ______ voice.", options: ["best", "better", "more", "most"], correctIndex: 1, explanation: "我怎麼想也想不到有擁有『更好(better)』聲音的人了呢。" },
+                    { id: "q_com4", question: "This pencil is too short.\nPlease give me a ______ one.", options: ["lighter", "longer", "smaller", "taller"], correctIndex: 1, explanation: "這支筆嫌太短，當然就要來一支更長的 longer 的啦！" },
+                    { id: "q_com5", question: "Lucy looks ______ in pants than in a dress.", options: ["pretty", "prettily", "prettier", "the prettiest"], correctIndex: 2, explanation: "又看見 than 來幫忙！代表穿褲子比穿裙子更讚，找比較級 prettier 啦！" },
+                    { id: "q_com6", question: "I think you need a ______ place.", options: ["cleaner", "quieter", "safer", "smaller"], correctIndex: 1, explanation: "客廳有人在吵，看來你這個環境是需要一個『更安靜』(quieter)的新天地了。" },
+                    { id: "q_com7", question: "the one who finds ______ hidden balls will win.", options: ["many", "some", "the more", "the most"], correctIndex: 3, explanation: "這個能找出「最多顆(the most)」球的人就能帶走獎金！看到後面全部人都參與競爭，就上最高級。" },
+                    { id: "q_com8", question: "you can't find ______ steak in the city.", options: ["delicious", "more delicious", "the most delicious", "deliciously"], correctIndex: 1, explanation: "在城裡找不到『比這個更好吃的』＝這根本已經是全市最猛的牛排啦！邏輯轉一下喔！" },
+                    { id: "q_com9", question: "They look ______ like brothers than father and son.", options: ["as", "less", "more", "not"], correctIndex: 2, explanation: "這是一個組合包，叫 more A than B... 意思是說比起像父子，看起來『更像』親兄弟啦！" },
+                    { id: "q_com10", question: "the price is ______ important thing...\nHe cares even more about...", options: ["the more", "the most", "the less", "the least"], correctIndex: 3, explanation: "他在乎口袋>在乎別的，那價格這東西對他自然就是『最不』重要的 (the least) 囉！" }
+                ]
+            },
+            "quantifiers": {
+                id: "quantifiers",
+                title: "not any, no, some等",
+                icon: <Search className="w-6 h-6 text-violet-500" />,
+                color: "bg-violet-50 border-violet-200",
+                accent: "text-violet-600",
+                topics: [{ id: "t1", title: "數量詞用法" }],
+                questions: [
+                    { id: "q_q1", question: "I'd love to, but I don't have ______ money with me.", options: ["no", "all", "any", "some"], correctIndex: 2, explanation: "否定詞 don't 後面接錢錢，如果一毛都沒有，就配 any money。" },
+                    { id: "q_q2", question: "No, he didn't, but he bought ______ fish.", options: ["no", "any", "some", "both"], correctIndex: 2, explanation: "雖然沒有買剛剛的事物，但他還是買了「一些」魚。這句是肯定句喔！就給它加 some 吧！" },
+                    { id: "q_q3", question: "bought so many watches but never wears ______ of them.", options: ["any", "both", "every", "others"], correctIndex: 0, explanation: "從沒拿過其中任何一支出來戴！這個 never 本身就是一種否定，配的絕對是 any。" },
+                    { id: "q_q4", question: "Are there any good ______ this week?", options: ["ones", "others", "them", "those"], correctIndex: 0, explanation: "有沒有什麼好看的電影呢？good ones 代表好「東東們(複數)」！" },
+                    { id: "q_q5", question: "Jogging is the only exercise I enjoy.\nI find ______ other kinds of exercise boring.", options: ["all", "few", "many", "some"], correctIndex: 0, explanation: "只喜歡慢跑，意思就是其他的「全部 (all)」我都覺得超無聊！" },
+                    { id: "q_q6", question: "Susan bought ______ bread in the supermarket.", options: ["many", "some", "any", "one"], correctIndex: 1, explanation: "蘇珊在超市買了「一些」麵包... 這麼平凡的肯定句就不要懷疑先選 some 上去啦。" },
+                    { id: "q_q7", question: "______ other waiters... have worked here longer than Clark; only Lois and Lana...", options: ["All", "Most", "Some", "Few"], correctIndex: 3, explanation: "只有另外那兩神人可以做比他久，那代表其他有比他久的員工人數簡直少得可憐 (Few)。" },
+                    { id: "q_q8", question: "Southwell Tennis Club was the ______ club that David joined last year.\nHe was too busy to join any other.", options: ["best", "first", "only", "other"], correctIndex: 2, explanation: "因為他忙到別的俱樂部都無法參加，所以網球就變成他的「唯一(only)」！" }
+                ]
+            },
+            "clauses-if": {
+                id: "clauses-if",
+                title: "If, whether, when 等",
+                icon: <GitBranch className="w-6 h-6 text-fuchsia-500" />,
+                color: "bg-fuchsia-50 border-fuchsia-200",
+                accent: "text-fuchsia-600",
+                topics: [{ id: "t1", title: "連接詞與條件句" }],
+                questions: [
+                    { id: "q_ci1", question: "I'm not sure _____ we can still go fishing tomorrow.", options: ["who", "what", "which", "whether"], correctIndex: 3, explanation: "因為人家回答「我不確定喔...」，代表後面的意思是「是否 (whether)」明天還能去釣魚。" },
+                    { id: "q_ci2", question: "If Frank _____ to the office tonight, give this package to him.", options: ["came", "comes", "has come", "will come"], correctIndex: 1, explanation: "If (如果) 帶領的條件句裡面，因為事情還沒發生，我們有個大絕招：用「現在式」來代替「未來式」！所以選 comes 就好啦。" },
+                    { id: "q_ci3", question: "he isn't sure _____ his mother likes dogs.", options: ["how", "what", "whether", "which"], correctIndex: 2, explanation: "他不確定到底媽媽喜不喜歡狗，一樣是要帶出「不確定是否 (whether)」。" },
+                    { id: "q_ci4", question: "It was an exciting moment... _____ they learned that...", options: ["what", "when", "whether", "why"], correctIndex: 1, explanation: "這是個令人興奮的時刻...「當 (When)」他們得知這個消息。用 When 連接兩個發生的動作。" },
+                    { id: "q_ci5", question: "If the weather is fine... my family _____ to the beach.", options: ["go", "went", "have gone", "will go"], correctIndex: 3, explanation: "前面用 If + 現在式，後面的主要句子既然要在未來發生，就要乖乖用未來式 will go 喔！" },
+                    { id: "q_ci6", question: "Betty _____ TV when her little brother fell off the chair.", options: ["watched", "was watching", "has watched", "is going to watch"], correctIndex: 1, explanation: "當弟弟從椅子上摔下來的那個節骨眼，Betty「正在」看電視，這件事是過去進行式 was watching。" },
+                    { id: "q_ci7", question: "When she studies... she _____ with her aunt.", options: ["lives", "has lived", "lived", "will live"], correctIndex: 3, explanation: "前方的 When she studies 用了現在式，也就是說當她未來去讀書的時候...，她「將會」住在那。用 will live！" },
+                    { id: "q_ci8", question: "until I _____ the work.", options: ["finish", "am finishing", "finished", "will finish"], correctIndex: 0, explanation: "until (直到) 也是會引導時間條件句，後面的動詞也是用「現在式 (finish)」來代替未來式喔！" },
+                    { id: "q_ci9", question: "Until _____, we have to prepare meals ourselves.", options: ["late", "now", "then", "today"], correctIndex: 2, explanation: "Until then 是一個超級常見的片語，意思就是「直到那時候」。" }
+                ]
+            },
+            "third-person": {
+                id: "third-person",
+                title: "三單",
+                icon: <User className="w-6 h-6 text-red-500" />,
+                color: "bg-red-50 border-red-200",
+                accent: "text-red-600",
+                topics: [{ id: "t1", title: "第三人稱單數變化" }],
+                questions: [
+                    { id: "q_tp1", question: "Frank read a comic book yesterday, but his brother _____.", options: ["does", "doesn't", "did", "didn't"], correctIndex: 3, explanation: "Yesterday (昨天) 代表整件事是過去式。前面肯定 (read)，but 後面用否定，所以選 didn't。" },
+                    { id: "q_tp2", question: "Learning foreign languages _____ me to know more...", options: ["helps", "helping", "help", "to help"], correctIndex: 0, explanation: "「學外語 (Learning...)」這整件事我們可以看做一個單數的存在。因為是第三人稱單數，現在式動詞記得加 s 變 helps！" },
+                    { id: "q_tp3", question: "my sister is the only person who _____ chocolate.", options: ["love", "loves", "loved", "loving"], correctIndex: 1, explanation: "先行詞 the only person (唯一的那個人) 是單數，關代 who 後面的動詞也要跟著單數變化，選 loves！" },
+                    { id: "q_tp4", question: "Mrs. Smith _____ the movie very much.\nShe has seen it three times.", options: ["liked", "likes", "has liked", "will like"], correctIndex: 1, explanation: "She has seen it... (她已經看過三次了)，這代表她現在處於「喜歡 (likes)」這部電影的狀態，所以用現在式！" },
+                    { id: "q_tp5", question: "Life in the mountains _____ quieter than life in big cities.", options: ["are", "is", "to be", "being"], correctIndex: 1, explanation: "雖然句子很長，但真正的主角是山裡的「生活 (Life)」。Life 也是單數(it)，動詞配上 is。" },
+                    { id: "q_tp6", question: "but her sister _____.\nShe can't even stay...", options: ["can't", "doesn't", "isn't", "won't"], correctIndex: 1, explanation: "後面有寫 She can't even stay... 代表姊姊根本沒有興趣。前面對比 melody has a great interest (一般動詞)，所以用 doesn't (have)。" },
+                    { id: "q_tp7", question: "Smart Head, one of the hottest TV programs..., _____ people free plane tickets...", options: ["have given", "gives", "giving", "to give"], correctIndex: 1, explanation: "電視節目 Smart Head 雖然有 head 這個字，但這是一個專有名詞(單數)，動詞要選 gives。" }
+                ]
+            },
+            "noun-clauses": {
+                id: "noun-clauses",
+                title: "名詞子句",
+                icon: <Layers className="w-6 h-6 text-blue-500" />,
+                color: "bg-blue-50 border-blue-200",
+                accent: "text-blue-600",
+                topics: [{ id: "t1", title: "名詞子句練習" }],
+                questions: [
+                    { id: "q_nc1", question: "Alice learned from the TV news _____ Nora Jones was coming...", options: ["that", "where", "which", "whether"], correctIndex: 0, explanation: "Alice 得知了「瓊斯要來」這件事。後面是一句完整的話，我們用 that 這個連接詞把它包起來當作一件事！" },
+                    { id: "q_nc2", question: "she doesn't know _____ the restaurant is.", options: ["that", "where", "whether", "which"], correctIndex: 1, explanation: "她不知道這間餐廳到底「在哪裡」。地點的疑問詞要用 where。" },
+                    { id: "q_nc3", question: "My father told me last night _____ we're going to the Food Festival.", options: ["whether", "where", "what", "that"], correctIndex: 3, explanation: "爸爸昨晚告我「我們打算去美食節」這件事。一樣後面是一句完整的話，就叫 that 出來說明！" },
+                    { id: "q_nc4", question: "Do you know _____ she was there?", options: ["how", "if", "when", "why"], correctIndex: 3, explanation: "整句話的意思聽起來像「你知道『為什麼』她會在那裡嗎？」。選項裡的 why 讀起來最合理！" },
+                    { id: "q_nc5", question: "I was surprised to know... _____ flowers do not always smell sweet.", options: ["that", "when", "where", "which"], correctIndex: 0, explanation: "我很驚訝地得知「花不總是香的」這件事。這也是 that 開頭的名詞子句經典考法！" },
+                    { id: "q_nc6", question: "Have you decided _____ you will celebrate your 30th birthday?", options: ["how", "where", "what", "when"], correctIndex: 0, explanation: "你決定好「如何 (how)」慶祝你的 30 歲生日了嗎？" }
+                ]
+            },
+            "past-exams": {
+                id: "past-exams",
+                title: "歷屆試題分析 (110-113)",
+                icon: <FileText className="w-6 h-6 text-slate-700" />,
+                color: "bg-slate-100 border-slate-300",
+                accent: "text-slate-800",
+                topics: [{ id: "113", title: "113 會考" }, { id: "112", title: "112 會考" }, { id: "111", title: "111 會考" }, { id: "110", title: "110 會考" }],
+                questions: [
+                    // 110 Analysis
+                    { id: "pe_110_1", question: "[110] Listen! The baby ______ in the bedroom.", options: ["cried", "cries", "is crying", "will cry"], correctIndex: 2, explanation: "看到 Listen! (聽啊！) 或是 Look!，代表事情「正趕在當下發生」，直接選現在進行式 is crying。" },
+                    { id: "pe_110_2", question: "[110] He ______ them since he came to work in Taiwan.", options: ["didn't see", "doesn't see", "hasn't seen", "won't see"], correctIndex: 2, explanation: "看到 since (...自從)，前面大概率要配現在完成式！這裡意思是「一直都沒見到」，選 hasn't seen。" },
+                    { id: "pe_110_3", question: "[110] She ______ with me for a week.", options: ["stays", "stayed", "has stayed", "will stay"], correctIndex: 3, explanation: "前面說 is coming (將要來)，這件事還沒發生，所以這一個禮拜她當然是「將會」待在我們家。選 will stay。" },
+                    { id: "pe_110_4", question: "[110] but when she ______, everyone... can hear her.", options: ["can", "does", "has", "will"], correctIndex: 1, explanation: "laughs (笑) 是一般動詞現在式，如果要強調或替代這個動作，助動詞就請 does 來幫忙！" },
+                    { id: "pe_110_5", question: "[110] If you're interested..., ______ this number.", options: ["calling", "call", "and call", "to call"], correctIndex: 1, explanation: "If you're interested... 是條件，那後面我們提出一個動作建議「打這個號碼」。祈使句開頭直接上原形動詞 call！" },
+                    { id: "pe_110_6", question: "[110] Jimmy would not get up..., ______ his dad had already tried...", options: ["although", "because", "if", "until"], correctIndex: 0, explanation: "吉米死都不起床，「雖然 (although)」老爸已經嘗試過各種方法了。轉折語氣很明顯！" },
+                    { id: "pe_110_7", question: "[110] songs ______ at school.", options: ["are learned", "that learned", "they learned", "that they are learned"], correctIndex: 2, explanation: "這個關代比較稍微進階：「他們在學校學到的歌」。正確版是 the songs (that) they learned。選項裡找 they learned！" },
+                    { id: "pe_110_8", question: "[110] Beverly eats lots of snacks ______ meals.", options: ["after", "between", "during", "from"], correctIndex: 1, explanation: "Beverly 這傢伙在餐跟餐「之間」吃了一堆零食。兩餐之間要用 between。" },
+                    { id: "pe_110_9", question: "[110] See if you can find ______ in there.", options: ["any", "it", "others", "those"], correctIndex: 0, explanation: "去看看你能不能在裡面找到「任何一些 (any)」工具。任何一些的代名詞就選 any。" },
+                    // 111 Analysis
+                    { id: "pe_111_1", question: "[111] The movie starts at two o'clock, ______ let's meet at...", options: ["so", "or", "if", "because"], correctIndex: 0, explanation: "電影兩點開始，「所以 (so)」我們點見面吧。這是最單純的因果關係喔！" },
+                    { id: "pe_111_2", question: "[111] Although it took me lots of time ______ a big meal...", options: ["prepare", "to prepare", "preparing", "prepared"], correctIndex: 1, explanation: "「花時間做某事」句型：It takes/took + 人 + 時間 + to + 原形動詞。所以準備午餐是 to prepare。" },
+                    { id: "pe_111_3", question: "[111] Bob is ______ of the boys in the family.", options: ["lazier", "the lazy", "the lazier", "the laziest"], correctIndex: 3, explanation: "Bob 是家裡所有的男生當中「最懶的」。看到 of the boys 這種大範圍比較，就要上最高級 the laziest。" },
+                    { id: "pe_111_4", question: "[111] Aunt Gina... so she ______ it very well.", options: ["will know", "knew", "knows", "was going to know"], correctIndex: 2, explanation: "Gina 阿姨住那邊已經快六十年了，當然她現在「知道 / 了解」那裡很熟。狀態用現在式 knows。" },
+                    { id: "pe_111_5", question: "[111] Yesterday... my brother ______ for dinner...", options: ["goes out", "went out", "has gone out", "was going out"], correctIndex: 1, explanation: "Yesterday (昨天) 就是過去式無誤，加上 and 後面也是過去式。所以出門吃飯要選 went out！" },
+                    { id: "pe_111_6", question: "[111] Mr. Firth ______ someone to take care of his kids...", options: ["has looked for", "is looking for", "looks for", "was looking for"], correctIndex: 1, explanation: "現在因為媽媽不在，Mr. Firth 「正在」找人照顧他的小孩。當下狀態用 is looking for。" },
+                    { id: "pe_111_7", question: "[111] Ariel ______ every night for a week before her Chinese test...", options: ["studied", "studies", "has studied", "was going to study"], correctIndex: 0, explanation: "for a week (長達一週) 但後面有 before her Chinese test (在考中文前)。中文考試已經結束了，這是在說過去的事，所以選過去式 studied。" },
+                    { id: "pe_111_8", question: "[111] saw a woman get in his car ______ away.", options: ["drive", "drove", "and drive", "and drove"], correctIndex: 2, explanation: "感官動詞(saw) + 受詞 + 上車(get in, 原形動詞)，後方 and 連接也要維持一樣的原形動詞 drive 喔！" },
+                    { id: "pe_111_9", question: "[111] the little girl who ______ at a supermarket.", options: ["took away", "taken away", "has taken away", "was taken away"], correctIndex: 3, explanation: "在超市「被帶走」的小女孩。小女孩不是自己走的，是「被」帶走！所以用被動 was taken away。" },
+                    { id: "pe_111_10", question: "[111] Buses... come once every hour, and we just missed ______.", options: ["another", "it", "one", "them"], correctIndex: 1, explanation: "公車一小時才一班，而我們剛好就錯過了「那班車」。特定的那班車代名詞直接用 it！" },
+                    // 112 Analysis
+                    { id: "pe_112_1", question: "[112] watched Ms. Smith ______ at the party.", options: ["danced", "dancing", "has danced", "to dance"], correctIndex: 1, explanation: "watched (看著) 也是感官動詞，強調「正看著她在跳舞」那個跳耀的過程畫面，選 Ving: dancing。" },
+                    { id: "pe_112_2", question: "[112] He ______ in the park at the time.", options: ["jogged", "was jogging", "has jogged", "would jog"], correctIndex: 1, explanation: "at the time 指的是過去的那段時間。他「正好當時正在」公園慢跑，用過去進行式 was jogging。" },
+                    { id: "pe_112_3", question: "[112] Ed and Jill ______ camping this weekend.", options: ["went", "were going", "are going", "have gone"], correctIndex: 2, explanation: "Ed 還有 Jill 這週末要去露營。this weekend 還沒到，可以用「現在進行式 (are going)」代替未來式喔！" },
+                    { id: "pe_112_4", question: "[112] I ______ swimming for several years before I went to this high school.", options: ["have practiced", "am practicing", "practiced", "would practice"], correctIndex: 2, explanation: "before I went 表示在上高中這個過去時間之前，所以練習游泳這件事早就是一段發生過的記憶了，用過去式 practiced！" },
+                    { id: "pe_112_5", question: "[112] Don't go away when you're cooking, ______ the food might burn.", options: ["but", "if", "or", "so"], correctIndex: 2, explanation: "煮飯時別離開，「否則 (or)」食物會燒焦。在這裡的 or 不是「或者」，是「否則」的意思！" },
+                    { id: "pe_112_6", question: "[112] Jerry wanted to know ______ he was kicked off...", options: ["where", "when", "whether", "why"], correctIndex: 3, explanation: "Jerry 想要知道「為什麼 (why)」他會被踢出隊伍。原因的疑問詞最好選。" },
+                    { id: "pe_112_7", question: "[112] since his ears ______ by a mouse.", options: ["bit", "bite", "were bitten", "have bitten"], correctIndex: 2, explanation: "耳朵不會自己咬人，是「被」老鼠咬了！加上 since 後面帶過去時間點，也就是 were bitten 被動。" },
+                    { id: "pe_112_8", question: "[112] If we play..., there ______ more fun.", options: ["are", "has", "will be", "will have"], correctIndex: 2, explanation: "If 條件句「如果我們玩...」，那對未來發生的預測「將會有 ...」，用 There will be 啦！" },
+                    { id: "pe_112_9", question: "[112] I ______ found it in a small shop.", options: ["almost", "even", "finally", "still"], correctIndex: 2, explanation: "找找找，找了半天「終於 (finally)」在一間小店找到了。語氣上很合理。" },
+                    { id: "pe_112_10", question: "[112] only makes things ______.", options: ["easier", "worse", "more boring", "more convenient"], correctIndex: 1, explanation: "我們做的這些事只有讓情況變得「更糟」。bad 的比較級就是 worse 喔。" },
+                    { id: "pe_112_11", question: "[112] Scott wasn't sure if the young woman... was ______ pulled him out...", options: ["who", "the one", "the one she", "the one who"], correctIndex: 3, explanation: "他不是很確定那個女子是不是就是把他拉出來的「那個人(the one)」+ 限定修飾的「who...」！" },
+                    { id: "pe_112_12", question: "[112] The new medicine... ______ thousands of lives.", options: ["and saved", "has saved", "saving", "to save"], correctIndex: 1, explanation: "新藥「已經拯救了」成千上萬的生命了。從發明到現在一直有救人，用現在完成式 has saved。" },
+                    { id: "pe_112_13", question: "[112] he ______ quietly beside me.", options: ["will come and sit", "comes and sits", "has come and sat", "used to come and sit"], correctIndex: 3, explanation: "講過去的習慣：「他過去習慣跑來安靜地坐我旁邊」。只要講到「從前常常...」就是 used to 出馬的時候！" },
+                    // 113 Analysis
+                    { id: "pe_113_1", question: "[113] Anna hates ______ very much.", options: ["them", "so", "one", "it"], correctIndex: 3, explanation: "Anna 很討厭「在雪地裡走路」這整件事！把這件事縮成一個代號，不用懷疑就是 it！" },
+                    { id: "pe_113_2", question: "[113] and so ______ I.", options: ["am", "do", "have", "will"], correctIndex: 1, explanation: "前面說喜歡，如果你也一樣，就會說 so do I (我也是)。因為 likes 是一般動詞，所以後面派 do 來接手。" },
+                    { id: "pe_113_3", question: "[113] but if it ______ does, just give me a call.", options: ["already", "even", "finally", "still"], correctIndex: 3, explanation: "如果它「仍然 / 還是」發生了的話，給我打個電話吧。still 表示狀況持續。" },
+                    { id: "pe_113_4", question: "[113] until he ______ an apartment.", options: ["will find", "would find", "finds", "found"], correctIndex: 2, explanation: "until 這個連接詞引導條件，就算是指未來的事，這段條件裡也要當作「現在式 (finds)」來寫！" },
+                    { id: "pe_113_5", question: "[113] Students ______ to go on the school trip should ask...", options: ["who want", "want", "who they want", "what they want"], correctIndex: 0, explanation: "「想去畢旅的學生們」：Students 當先行詞是人，用 who 接在後面。所以是 Students who want..." },
+                    { id: "pe_113_6", question: "[113] at a height of 3,000m ______ sea level.", options: ["above", "at", "below", "in"], correctIndex: 0, explanation: "在海平面「之上」，空間上的上方我們會用 above！" },
+                    { id: "pe_113_7", question: "[113] Patty spent several days..., ______ she couldn't say a word...", options: ["but", "if", "or", "so"], correctIndex: 0, explanation: "Patty 花了好幾天跟老闆抱怨，「但是 (but)」最後跟老闆見面卻擠不出一句話。典型轉折。" },
+                    { id: "pe_113_8", question: "[113] I can't tell you... because I ______ it.", options: ["am not seeing", "don't see", "haven't seen", "won't see"], correctIndex: 2, explanation: "我無法告訴你在演什麼...因為我「還沒看過」。也就是從過去到目前沒有經驗，選 haven't seen。" },
+                    { id: "pe_113_9", question: "[113] Well, ______ most of it this afternoon, and I'll finish...", options: ["I would do", "I did", "I was doing", "I'll do"], correctIndex: 1, explanation: "I'll finish it... 表示後面剩下的部分我會做完。那前半段下午就已經「做完了(I did)」，過去式。" },
+                    { id: "pe_113_10", question: "[113] \"Bad traffic\" is perhaps the ______ excuse for being late...", options: ["easiest", "oldest", "smartest", "worst"], correctIndex: 1, explanation: "塞車永遠是大家用來遲到最「老套的 (oldest)」藉口啦！在這麼多藉口裡面比，要用最高級！" },
+                    { id: "pe_113_11", question: "[113] The housework... ______ between them and their kids.", options: ["is shared", "are shared", "shares", "share"], correctIndex: 0, explanation: "家事不可能自己分攤自己，一定是「被」分攤！The housework 是單數(it)，被動就選 is shared 囉！" }
+                ]
+            }
+        };
+
+        // --- Components ---
+
+        const ProgressBar = ({ current, total, colorClass = "bg-indigo-600" }) => {
+            const percentage = Math.min(100, Math.max(0, (current / total) * 100));
+            return (
+                <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                    <motion.div
+                        className={`h-2.5 rounded-full ${colorClass}`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${percentage}%` }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                    />
+                </div>
+            );
+        };
+
+        const Header = ({ xp, setView, onRandomMix }) => (
+            <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex justify-between items-center shadow-sm">
+                <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setView('dashboard')}>
+                    <div className="bg-indigo-600 p-1.5 rounded-lg">
+                        <Star className="w-5 h-5 text-white fill-current" />
+                    </div>
+                    <h1 className="text-xl font-bold text-gray-800 tracking-tight">Grammar<span className="text-indigo-600">Hero</span></h1>
+                </div>
+                {onRandomMix && (
+                    <button
+                        onClick={onRandomMix}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-xl text-sm font-bold transition-colors shadow-sm"
+                    >
+                        <Zap className="w-4 h-4 fill-current" />
+                        <span className="hidden sm:inline">隨機 10 題特訓</span>
+                        <span className="inline sm:hidden">特訓</span>
+                    </button>
+                )}
+            </header>
+        );
+
+        const DashboardCard = ({ group, progress, onClick }) => {
+            return (
+                <motion.div
+                    whileHover={{ y: -4, shadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`relative overflow-hidden rounded-2xl border-2 ${group.color} p-4 cursor-pointer transition-colors bg-white hover:border-opacity-100 border-opacity-60 shadow-sm flex flex-col h-full`}
+                    onClick={onClick}
+                >
+                    <div className="flex justify-between items-start mb-3">
+                        <div className="p-2 bg-white rounded-xl shadow-sm border border-gray-100">
+                            {group.icon}
+                        </div>
+                        {group.questions.length === 0 && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">
+                                建置中
+                            </span>
+                        )}
+                    </div>
+
+                    <h3 className="text-base font-bold text-gray-800 mb-2 leading-tight">{group.title}</h3>
+
+                    {/* Topics Preview - Simplified for denser grid */}
+                    <div className="space-y-1 mb-4 flex-1">
+                        {group.topics.slice(0, 2).map(topic => (
+                            <div key={topic.id} className="text-xs text-gray-500 flex items-center truncate">
+                                <span className={`w-1 h-1 rounded-full mr-1.5 bg-gray-300`}></span>
+                                {topic.title}
+                            </div>
+                        ))}
+                        {group.topics.length > 2 && <div className="text-[10px] text-gray-400 pl-2.5">+{group.topics.length - 2} 更多</div>}
+                    </div>
+
+                    <div className="mt-auto pt-2 border-t border-gray-50/50">
+                        <div className="flex justify-between text-[10px] font-semibold text-gray-400 mb-1">
+                            <span>{group.questions.length} 題</span>
+                        </div>
+                    </div>
+                </motion.div>
+            );
+        };
+
+        const QuizOption = ({ text, index, isSelected, isCorrect, isWrong, onClick, disabled }) => {
+            let baseStyle = "w-full p-4 rounded-xl text-left font-medium text-lg border-2 transition-all duration-200 flex items-center justify-between group";
+            let stateStyle = "bg-white border-gray-200 text-gray-700 hover:border-indigo-300 hover:bg-indigo-50";
+
+            if (isSelected) {
+                stateStyle = "bg-indigo-100 border-indigo-500 text-indigo-700";
+            }
+            if (isCorrect) {
+                stateStyle = "bg-emerald-100 border-emerald-500 text-emerald-800";
+            }
+            if (isWrong && isSelected) {
+                stateStyle = "bg-rose-100 border-rose-500 text-rose-800";
+            }
+            if (disabled && !isSelected && !isCorrect) {
+                stateStyle = "bg-gray-50 border-gray-100 text-gray-400 opacity-60";
+            }
+
+            return (
+                <motion.button
+                    whileTap={!disabled ? { scale: 0.98 } : {}}
+                    onClick={() => !disabled && onClick(index)}
+                    className={`${baseStyle} ${stateStyle}`}
+                    disabled={disabled}
+                >
+                    <div className="flex items-center">
+                        <span className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm font-bold border ${isSelected || isCorrect || isWrong ? 'border-transparent bg-white/30' : 'border-gray-200 text-gray-400'
+                            }`}>
+                            {String.fromCharCode(65 + index)}
+                        </span>
+                        {text}
+                    </div>
+                    {isCorrect && <CheckCircle2 className="w-6 h-6 text-emerald-600" />}
+                    {isWrong && isSelected && <XCircle className="w-6 h-6 text-rose-600" />}
+                </motion.button>
+            );
+        };
+
+        const QuizView = ({ group, onBack, onComplete, initialXP, setGlobalXP }) => {
+            const [currentQIndex, setCurrentQIndex] = useState(0);
+            const [selectedOption, setSelectedOption] = useState(null);
+            const [status, setStatus] = useState('idle'); // idle, correct, wrong
+            const [score, setScore] = useState(0);
+            const [shaking, setShaking] = useState(false);
+            const [userAnswers, setUserAnswers] = useState([]); // Array to store user choices
+
+            // 打亂題目順序
+            const [questions] = useState(() => {
+                const list = group.questions || [];
+                return [...list].sort(() => Math.random() - 0.5);
+            });
+
+            const currentQ = questions[currentQIndex];
+            const isLastQuestion = currentQIndex === questions.length - 1;
+
+            const handleOptionClick = (index) => {
+                if (status !== 'idle') return;
+
+                setSelectedOption(index);
+
+                if (index === currentQ.correctIndex) {
+                    setStatus('correct');
+                    setScore(s => s + 1);
+                    setGlobalXP(xp => xp + 10);
+                } else {
+                    setStatus('wrong');
+                    setShaking(true);
+                    setTimeout(() => setShaking(false), 500);
+                }
+            };
+
+            const handleNext = () => {
+                // Record the user's answer (or null if they somehow skipped, though UI prevents this)
+                const newAnswers = [...userAnswers, selectedOption];
+                setUserAnswers(newAnswers);
+
+                if (isLastQuestion) {
+                    // Pass history to onComplete
+                    onComplete(score, questions.length, newAnswers, questions);
+                } else {
+                    setCurrentQIndex(prev => prev + 1);
+                    setSelectedOption(null);
+                    setStatus('idle');
+                }
+            };
+
+            if (questions.length === 0) {
+                return (
+                    <div className="flex flex-col items-center justify-center h-[80vh] px-6 text-center">
+                        <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                            <AlertCircle className="w-10 h-10 text-gray-400" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-2">題庫擴充中</h2>
+                        <p className="text-gray-500 mb-8">「{group.title}」的題目正在建置中，請先練習其他單元！</p>
+                        <button
+                            onClick={onBack}
+                            className="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition"
+                        >
+                            返回儀表板
+                        </button>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="max-w-2xl mx-auto pb-24">
+                    {/* Top Bar */}
+                    <div className="flex items-center mb-6 pt-2">
+                        <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full text-gray-500 mr-2">
+                            <ArrowLeft className="w-6 h-6" />
+                        </button>
+                        <div className="flex-1">
+                            <ProgressBar current={currentQIndex + 1} total={questions.length} colorClass="bg-indigo-500" />
+                        </div>
+                        <span className="ml-4 text-sm font-bold text-gray-400 whitespace-nowrap">
+                            {currentQIndex + 1} / {questions.length}
+                        </span>
+                    </div>
+
+                    {/* Question Card */}
+                    <motion.div
+                        key={currentQ.id}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="px-2"
+                    >
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-10 leading-relaxed whitespace-pre-line">
+                            {currentQ.question}
+                        </h2>
+
+                        <motion.div
+                            className="space-y-3"
+                            animate={shaking ? { x: [-10, 10, -10, 10, 0] } : {}}
+                            transition={{ duration: 0.4 }}
+                        >
+                            {currentQ.options.map((opt, idx) => (
+                                <QuizOption
+                                    key={idx}
+                                    index={idx}
+                                    text={opt}
+                                    isSelected={selectedOption === idx}
+                                    isCorrect={status !== 'idle' && idx === currentQ.correctIndex}
+                                    isWrong={status === 'wrong' && idx === selectedOption}
+                                    disabled={status !== 'idle'}
+                                    onClick={handleOptionClick}
+                                />
+                            ))}
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Feedback Sheet */}
+                    <AnimatePresence>
+                        {status !== 'idle' && (
+                            <motion.div
+                                initial={{ y: 100, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                className={`fixed bottom-0 left-0 right-0 p-6 border-t-2 shadow-2xl z-50 ${status === 'correct' ? 'bg-emerald-50 border-emerald-100' : 'bg-rose-50 border-rose-100'
+                                    }`}
+                            >
+                                <div className="max-w-2xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            {status === 'correct' ? (
+                                                <>
+                                                    <div className="bg-emerald-500 rounded-full p-1"><CheckCircle2 className="w-5 h-5 text-white" /></div>
+                                                    <span className="font-bold text-emerald-700 text-lg">答對了！</span>
+                                                    <span className="text-sm font-bold text-amber-500 bg-amber-100 px-2 py-0.5 rounded-full">+10 XP</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className="bg-rose-500 rounded-full p-1"><XCircle className="w-5 h-5 text-white" /></div>
+                                                    <span className="font-bold text-rose-700 text-lg">答錯了...</span>
+                                                </>
+                                            )}
+                                        </div>
+                                        <div className="text-gray-700 text-base leading-relaxed pl-1">
+                                            <span className="font-bold text-gray-900">解析：</span>{currentQ.explanation}
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={handleNext}
+                                        className={`w-full md:w-auto px-8 py-3 rounded-xl font-bold text-white shadow-md transition-transform active:scale-95 ${status === 'correct' ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-rose-500 hover:bg-rose-600'
+                                            }`}
+                                    >
+                                        {isLastQuestion ? "完成測驗" : "下一題"}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            );
+        };
+
+        const CompletionScreen = ({ score, total, onHome, group, userAnswers, shuffledQuestions }) => {
+            const percentage = Math.round((score / total) * 100);
+            const isPass = percentage >= 60;
+            const [showReview, setShowReview] = useState(false);
+
+            return (
+                <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4 pb-20">
+                    {!showReview && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="w-full flex flex-col items-center"
+                        >
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
+                                transition={{ type: "spring", duration: 0.8 }}
+                                className="mb-6 mt-10"
+                            >
+                                {isPass ? (
+                                    <div className="w-32 h-32 bg-yellow-100 rounded-full flex items-center justify-center border-4 border-yellow-200">
+                                        <Trophy className="w-16 h-16 text-yellow-500" />
+                                    </div>
+                                ) : (
+                                    <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center border-4 border-gray-200">
+                                        <RefreshCw className="w-16 h-16 text-gray-400" />
+                                    </div>
+                                )}
+                            </motion.div>
+
+                            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                                {isPass ? "太棒了！完成單元" : "再接再厲！"}
+                            </h2>
+                            <p className="text-gray-500 mb-8 text-lg">
+                                你在這個單元獲得了 <span className="font-bold text-indigo-600">{score}</span> / {total} 分
+                            </p>
+
+                            <div className="grid grid-cols-2 gap-4 w-full max-w-xs mb-8">
+                                <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                                    <div className="text-xs text-gray-400 uppercase font-bold mb-1">獲得 XP</div>
+                                    <div className="text-2xl font-bold text-amber-500">+{score * 10}</div>
+                                </div>
+                                <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                                    <div className="text-xs text-gray-400 uppercase font-bold mb-1">準確率</div>
+                                    <div className={`text-2xl font-bold ${isPass ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                        {percentage}%
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col w-full max-w-xs gap-3">
+                                <button
+                                    onClick={() => setShowReview(true)}
+                                    className="w-full px-8 py-4 bg-white text-indigo-600 border-2 border-indigo-100 font-bold rounded-xl shadow-sm hover:bg-indigo-50 hover:border-indigo-200 transition-all flex items-center justify-center gap-2"
+                                >
+                                    <Eye className="w-5 h-5" />
+                                    查看試題解析
+                                </button>
+
+                                <button
+                                    onClick={onHome}
+                                    className="w-full px-8 py-4 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-xl transition-all active:scale-95"
+                                >
+                                    回到儀表板
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {showReview && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 40 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="w-full max-w-2xl mx-auto pt-6 text-left"
+                        >
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                    <FileText className="w-6 h-6 text-indigo-500" />
+                                    試題詳解總表
+                                </h3>
+                                <button
+                                    onClick={() => setShowReview(false)}
+                                    className="text-sm font-semibold text-gray-500 hover:text-gray-800 underline"
+                                >
+                                    收起列表
+                                </button>
+                            </div>
+
+                            <div className="space-y-6">
+                                {(shuffledQuestions || group.questions).map((q, idx) => {
+                                    const userAnswerIndex = userAnswers[idx];
+                                    const isCorrect = userAnswerIndex === q.correctIndex;
+
+                                    return (
+                                        <div key={q.id} className={`p-5 rounded-2xl border-2 bg-white ${isCorrect ? 'border-emerald-100' : 'border-rose-100'}`}>
+                                            <div className="flex items-start gap-3 mb-4">
+                                                <div className={`mt-1 min-w-[28px] h-7 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0 ${isCorrect ? 'bg-emerald-500' : 'bg-rose-500'}`}>
+                                                    {idx + 1}
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-gray-800 text-lg leading-snug whitespace-pre-line">{q.question}</h4>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4 pl-10">
+                                                {q.options.map((opt, optIdx) => {
+                                                    const isSelected = userAnswerIndex === optIdx;
+                                                    const isAnswer = q.correctIndex === optIdx;
+
+                                                    let style = "border-gray-100 text-gray-500 bg-gray-50";
+                                                    if (isAnswer) style = "border-emerald-200 bg-emerald-50 text-emerald-700 font-bold";
+                                                    else if (isSelected && !isAnswer) style = "border-rose-200 bg-rose-50 text-rose-700 font-bold line-through";
+
+                                                    return (
+                                                        <div key={optIdx} className={`px-3 py-2 rounded-lg border text-sm flex items-center gap-2 ${style}`}>
+                                                            <span className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-xs shrink-0 opacity-60">
+                                                                {String.fromCharCode(65 + optIdx)}
+                                                            </span>
+                                                            {opt}
+                                                            {isAnswer && <CheckCircle2 className="w-4 h-4 ml-auto" />}
+                                                            {isSelected && !isAnswer && <XCircle className="w-4 h-4 ml-auto" />}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            <div className="pl-10">
+                                                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-sm leading-relaxed text-slate-600">
+                                                    <span className="font-bold text-slate-800 block mb-1">解析：</span>
+                                                    {q.explanation}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <div className="mt-8 pb-10 flex justify-center">
+                                <button
+                                    onClick={onHome}
+                                    className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700 transition-all"
+                                >
+                                    回到儀表板
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+                </div>
+            );
+        };
+
+        // --- Main App Component ---
+
+        function App() {
+            const [view, setView] = useState('dashboard'); // dashboard, quiz, completion
+            const [activeGroupId, setActiveGroupId] = useState(null);
+            const [xp, setXp] = useState(1250);
+            // [UPDATED] State to hold detailed completion data
+            const [completedData, setCompletedData] = useState({ score: 0, total: 0, userAnswers: [], shuffledQuestions: null, groupId: null });
+            const [randomGroup, setRandomGroup] = useState(null);
+
+            // Generate initial progress based on keys (Mock data for now)
+            const [progressData] = useState(() => {
+                const progress = {};
+                Object.keys(GRAMMAR_DATA).forEach(key => {
+                    progress[key] = Math.floor(Math.random() * 60); // Random progress for visual effect
+                });
+                return progress;
+            });
+
+            const startQuiz = (groupId) => {
+                setActiveGroupId(groupId);
+                setView('quiz');
+            };
+
+            const startRandomTest = () => {
+                const allQuestions = [];
+                Object.values(GRAMMAR_DATA).forEach(group => {
+                    if (group.questions) {
+                        allQuestions.push(...group.questions);
+                    }
+                });
+                const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+                const selected10 = shuffled.slice(0, 10);
+
+                const randomGroupObj = {
+                    id: 'random-10',
+                    title: '隨機 10 題特訓',
+                    icon: <Zap className="w-6 h-6 text-amber-500" />,
+                    color: "bg-amber-50 border-amber-200",
+                    accent: "text-amber-600",
+                    topics: [{ id: "t1", title: "涵蓋所有文法範圍" }],
+                    questions: selected10
+                };
+
+                setRandomGroup(randomGroupObj);
+                setActiveGroupId('random-10');
+                setView('quiz');
+            };
+
+            // [UPDATED] Handler receives full answer history
+            const handleQuizComplete = (score, total, userAnswers, shuffledQuestions) => {
+                setCompletedData({ score, total, userAnswers, shuffledQuestions, groupId: activeGroupId });
+                setView('completion');
+            };
+
+            const goHome = () => {
+                setView('dashboard');
+                setActiveGroupId(null);
+            };
+
+            return (
+                <div className="min-h-screen bg-[#F7F9FC] font-sans text-slate-800">
+                    <Header xp={xp} setView={goHome} onRandomMix={view === 'dashboard' ? startRandomTest : null} />
+
+                    <main className="container mx-auto px-4 py-6 max-w-6xl">
+                        <AnimatePresence mode="wait">
+                            {view === 'dashboard' && (
+                                <motion.div
+                                    key="dashboard"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                >
+                                    <div className="mb-8">
+                                        <h2 className="text-2xl font-bold text-gray-800 mb-2">國中會考英文總複習</h2>
+                                        <p className="text-gray-500">選擇一個語法主題開始練習！</p>
+                                    </div>
+
+                                    {/* Bento Grid Layout */}
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        {Object.values(GRAMMAR_DATA).map((group) => (
+                                            <DashboardCard
+                                                key={group.id}
+                                                group={group}
+                                                progress={progressData[group.id] || 0}
+                                                onClick={() => startQuiz(group.id)}
+                                            />
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {view === 'quiz' && activeGroupId && (
+                                <motion.div
+                                    key="quiz"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    <QuizView
+                                        group={activeGroupId === 'random-10' ? randomGroup : GRAMMAR_DATA[activeGroupId]}
+                                        onBack={goHome}
+                                        onComplete={handleQuizComplete}
+                                        initialXP={xp}
+                                        setGlobalXP={setXp}
+                                    />
+                                </motion.div>
+                            )}
+
+                            {view === 'completion' && completedData.groupId && (
+                                <motion.div
+                                    key="completion"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    <CompletionScreen
+                                        score={completedData.score}
+                                        total={completedData.total}
+                                        userAnswers={completedData.userAnswers}
+                                        shuffledQuestions={completedData.shuffledQuestions}
+                                        group={completedData.groupId === 'random-10' ? randomGroup : GRAMMAR_DATA[completedData.groupId]}
+                                        onHome={goHome}
+                                    />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </main>
+                </div>
+            );
+        }
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
