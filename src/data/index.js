@@ -18,6 +18,8 @@ import { chapter_clauses_if } from './chapters/clauses-if';
 import { chapter_third_person } from './chapters/third-person';
 import { chapter_noun_clauses } from './chapters/noun-clauses';
 import { chapter_past_exams } from './chapters/past-exams';
+import { chapter_book_a } from './chapters/book-a';
+import { chapter_book_b } from './chapters/book-b';
 
 export const GRAMMAR_DATA = {
   "ving-tov-imp": chapter_ving_tov_imp,
@@ -40,4 +42,6 @@ export const GRAMMAR_DATA = {
   "third-person": chapter_third_person,
   "noun-clauses": chapter_noun_clauses,
   "past-exams": chapter_past_exams,
+  "book-a": chapter_book_a,
+  "book-b": chapter_book_b,
 };
