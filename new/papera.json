@@ -1,0 +1,523 @@
+{
+  "id": "paper-a",
+  "title": "試卷 A｜歷屆精選文法題",
+  "icon": "FileText",
+  "iconClass": "w-6 h-6 text-emerald-500",
+  "color": "bg-emerald-50 border-emerald-200",
+  "accent": "text-emerald-600",
+  "topics": [
+    {
+      "id": "P1",
+      "title": "綜合文法練習"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "topicId": "P1",
+      "question": "Maggie _______ go to her swimming class yesterday because she had a headache.",
+      "options": {
+        "A": "isn't",
+        "B": "doesn't",
+        "C": "didn't",
+        "D": "won't"
+      },
+      "answer": "C",
+      "explanation": "yesterday 表示過去時間，助動詞用 didn't。"
+    },
+    {
+      "id": "q2",
+      "topicId": "P1",
+      "question": "Irene: _______ is the clock on the wall?\nNick: Three hundred fifty dollars. It's on sale now.",
+      "options": {
+        "A": "How long",
+        "B": "How often",
+        "C": "How many",
+        "D": "How much"
+      },
+      "answer": "D",
+      "explanation": "回答金額（三百五十元），問「多少錢」用 How much。"
+    },
+    {
+      "id": "q3",
+      "topicId": "P1",
+      "question": "Bob: Mom, I'm hungry. May I have the bread on the table?\nMom: Sure. Just leave _______ for your sister.",
+      "options": {
+        "A": "it",
+        "B": "some",
+        "C": "a few",
+        "D": "many"
+      },
+      "answer": "B",
+      "explanation": "bread 為不可數名詞，「留一些給妹妹」用 some；a few 和 many 只接可數複數名詞。"
+    },
+    {
+      "id": "q4",
+      "topicId": "P1",
+      "question": "Let's eat out this evening. There _______ any food in the refrigerator.",
+      "options": {
+        "A": "is",
+        "B": "are",
+        "C": "isn't",
+        "D": "aren't"
+      },
+      "answer": "C",
+      "explanation": "food 為不可數名詞，否定用 isn't；any 用於否定句與疑問句。"
+    },
+    {
+      "id": "q5",
+      "topicId": "P1",
+      "question": "Sandy: Look! The water in this lake is so clear. It is the most beautiful lake in our town.\nMax: Yes, _______ full of beautiful fish.",
+      "options": {
+        "A": "it is",
+        "B": "there is",
+        "C": "they are",
+        "D": "there are"
+      },
+      "answer": "A",
+      "explanation": "代替前句的 the lake（單數），用代名詞 it is。"
+    },
+    {
+      "id": "q6",
+      "topicId": "P1",
+      "question": "We have to hurry up, _______ we are sure to miss part of the game.",
+      "options": {
+        "A": "so",
+        "B": "or",
+        "C": "but",
+        "D": "and"
+      },
+      "answer": "B",
+      "explanation": "「我們得快點，否則一定會錯過比賽」，or 表「否則」（= or else）。"
+    },
+    {
+      "id": "q7",
+      "topicId": "P1",
+      "question": "Hank had to prepare for an important report, so he didn't go to bed _______ it was 12 o'clock last night.",
+      "options": {
+        "A": "after",
+        "B": "because",
+        "C": "though",
+        "D": "until"
+      },
+      "answer": "D",
+      "explanation": "didn't... until 表「直到……才……」，即直到 12 點才去睡。"
+    },
+    {
+      "id": "q8",
+      "topicId": "P1",
+      "question": "_______ it's already November, people in Kaohsiung are still wearing shorts and T-shirts. It is strange weather.",
+      "options": {
+        "A": "Because",
+        "B": "If",
+        "C": "Though",
+        "D": "When"
+      },
+      "answer": "C",
+      "explanation": "已是 11 月卻仍穿短袖，前後語意對比，用 Though（雖然）。"
+    },
+    {
+      "id": "q9",
+      "topicId": "P1",
+      "question": "There _______ a bottle of juice in the refrigerator. After you drink some, put it back.",
+      "options": {
+        "A": "are",
+        "B": "have",
+        "C": "has",
+        "D": "is"
+      },
+      "answer": "D",
+      "explanation": "a bottle of juice 視為單數名詞，用 There is。"
+    },
+    {
+      "id": "q10",
+      "topicId": "P1",
+      "question": "_______ seven cats at the same time is not an easy job. How can John do that?",
+      "options": {
+        "A": "Keep",
+        "B": "Keeping",
+        "C": "Kept",
+        "D": "Keeps"
+      },
+      "answer": "B",
+      "explanation": "動名詞 Keeping 作主詞，表示「同時照顧七隻貓」這件事。"
+    },
+    {
+      "id": "q11",
+      "topicId": "P1",
+      "question": "Mona saw a man _______ her sister's money, so she shouted at him right away.",
+      "options": {
+        "A": "taking away",
+        "B": "is taking away",
+        "C": "takes away",
+        "D": "was taking away"
+      },
+      "answer": "A",
+      "explanation": "see + 受詞 + V-ing，表示「看到某人正在做某事」，用現在分詞。"
+    },
+    {
+      "id": "q12",
+      "topicId": "P1",
+      "question": "Both movies are good, but I'll choose the funny one over _______ because I could use some laugh after a long day like this.",
+      "options": {
+        "A": "it",
+        "B": "one",
+        "C": "another",
+        "D": "the other"
+      },
+      "answer": "D",
+      "explanation": "兩部電影二選一，「另一部」用 the other。"
+    },
+    {
+      "id": "q13",
+      "topicId": "P1",
+      "question": "A-mei is my favorite singer in Taiwan. In my mind, there is no other singer sings _______ her in this country.",
+      "options": {
+        "A": "the best",
+        "B": "well than",
+        "C": "better than",
+        "D": "the most beautifully"
+      },
+      "answer": "C",
+      "explanation": "比較級句型：better than，表示「唱得比她好」。"
+    },
+    {
+      "id": "q14",
+      "topicId": "P1",
+      "question": "Simon: How much time do you need to get ready?\nNancy: _______ twenty minutes.",
+      "options": {
+        "A": "About",
+        "B": "For",
+        "C": "Since",
+        "D": "Until"
+      },
+      "answer": "A",
+      "explanation": "回答「大約需要幾分鐘」，用 About（大約）。"
+    },
+    {
+      "id": "q15",
+      "topicId": "P1",
+      "question": "In this country, people celebrate New Year _______ December 25th to January 5th. Stores and schools are close these days.",
+      "options": {
+        "A": "between",
+        "B": "during",
+        "C": "from",
+        "D": "on"
+      },
+      "answer": "C",
+      "explanation": "「從……到……」的固定搭配為 from...to...。"
+    },
+    {
+      "id": "q16",
+      "topicId": "P1",
+      "question": "Tina put a fan in her room to keep cool, but Mark _______. He used cold drinks to cool down.",
+      "options": {
+        "A": "isn't",
+        "B": "doesn't",
+        "C": "didn't",
+        "D": "won't"
+      },
+      "answer": "C",
+      "explanation": "對應前句過去式 put，否定助動詞用 didn't。"
+    },
+    {
+      "id": "q17",
+      "topicId": "P1",
+      "question": "Cindy: How many countries _______?\nJim: Ten. I spent a lot of money taking trips when I was young.",
+      "options": {
+        "A": "have you gone to",
+        "B": "have you been to",
+        "C": "will you visit",
+        "D": "are you going to"
+      },
+      "answer": "B",
+      "explanation": "have been to 表「曾去過（已回來）」；gone to 表「去了（尚未回來）」，此處問曾拜訪過的國家數用 have been to。"
+    },
+    {
+      "id": "q18",
+      "topicId": "P1",
+      "question": "Look! Here _______! We had better be quiet.",
+      "options": {
+        "A": "is it",
+        "B": "is she",
+        "C": "comes the teacher",
+        "D": "comes she"
+      },
+      "answer": "C",
+      "explanation": "Here 開頭的倒裝句型：Here + V + 名詞主詞，故用 comes the teacher。"
+    },
+    {
+      "id": "q19",
+      "topicId": "P1",
+      "question": "Ben has got a new pair of glasses. His glasses are more expensive than _______.",
+      "options": {
+        "A": "me",
+        "B": "my",
+        "C": "myself",
+        "D": "mine"
+      },
+      "answer": "D",
+      "explanation": "mine = my glasses，作比較的對象，避免重複使用名詞。"
+    },
+    {
+      "id": "q20",
+      "topicId": "P1",
+      "question": "No one knows _______ Peter will come. We don't have his phone number.",
+      "options": {
+        "A": "if",
+        "B": "what",
+        "C": "why",
+        "D": "who"
+      },
+      "answer": "A",
+      "explanation": "「不知道彼得是否會來」，用 if 引導名詞子句，表示「是否」。"
+    },
+    {
+      "id": "q21",
+      "topicId": "P1",
+      "question": "My mom cut my hair short yesterday. I really like _______ change.",
+      "options": {
+        "A": "their",
+        "B": "the",
+        "C": "these",
+        "D": "those"
+      },
+      "answer": "B",
+      "explanation": "指前文提到的那個特定「改變」，用定冠詞 the。"
+    },
+    {
+      "id": "q22",
+      "topicId": "P1",
+      "question": "I still haven't quite finished with your notes yet. Can I borrow them for _______ more days?",
+      "options": {
+        "A": "a little",
+        "B": "any",
+        "C": "a few",
+        "D": "much"
+      },
+      "answer": "C",
+      "explanation": "days 為可數複數名詞，「再幾天」用 a few；a little 和 much 修飾不可數名詞。"
+    },
+    {
+      "id": "q23",
+      "topicId": "P1",
+      "question": "I have no idea _______ you are talking about. Is the girl Susan?",
+      "options": {
+        "A": "what",
+        "B": "where",
+        "C": "when",
+        "D": "who"
+      },
+      "answer": "A",
+      "explanation": "「不知道你在說什麼」，間接問句 what you are talking about（what 作受詞）。"
+    },
+    {
+      "id": "q24",
+      "topicId": "P1",
+      "question": "Zoe has to do the dishes every day, but her sister _______.",
+      "options": {
+        "A": "hasn't to",
+        "B": "haven't to",
+        "C": "don't",
+        "D": "doesn't"
+      },
+      "answer": "D",
+      "explanation": "her sister 為第三人稱單數，否定用 doesn't（= doesn't have to，省略 have to）。"
+    },
+    {
+      "id": "q25",
+      "topicId": "P1",
+      "question": "I have made up my mind. Whether Jimmy _______ tomorrow or not, we will hold a party.",
+      "options": {
+        "A": "will come",
+        "B": "is coming",
+        "C": "has come",
+        "D": "comes"
+      },
+      "answer": "D",
+      "explanation": "whether 引導的副詞子句，表未來時間用現在式動詞 comes。"
+    },
+    {
+      "id": "q26",
+      "topicId": "P1",
+      "question": "Molly had an important meeting this morning, but she missed the bus. She was worried. Luckily, her friend picked her up and she got to the office just _______.",
+      "options": {
+        "A": "in no time",
+        "B": "in time",
+        "C": "at times",
+        "D": "from time to time"
+      },
+      "answer": "B",
+      "explanation": "in time 表「及時、剛好趕上」；in no time 表「立刻、馬上」，語意不符。"
+    },
+    {
+      "id": "q27",
+      "topicId": "P1",
+      "question": "It is so terrible to see the bird _______ by the hunter. How could he do this?",
+      "options": {
+        "A": "kill",
+        "B": "to kill",
+        "C": "killed",
+        "D": "killing"
+      },
+      "answer": "C",
+      "explanation": "see + 受詞 + 過去分詞，表示受詞被動承受動作（鳥被殺死）。"
+    },
+    {
+      "id": "q28",
+      "topicId": "P1",
+      "question": "Clerk: Would you like milk or sugar in your coffee, sir?\nSean: _______, please.",
+      "options": {
+        "A": "One",
+        "B": "Another",
+        "C": "The other",
+        "D": "Both"
+      },
+      "answer": "D",
+      "explanation": "牛奶和糖「兩樣都要」，用 Both。"
+    },
+    {
+      "id": "q29",
+      "topicId": "P1",
+      "question": "The movie starts at _______. Hurry up, or we will be late.",
+      "options": {
+        "A": "half past ten",
+        "B": "a quarter to ten",
+        "C": "five sixty",
+        "D": "thirty"
+      },
+      "answer": "A",
+      "explanation": "half past ten（十點半）是正確的時間說法；five sixty（5:60）不存在，thirty（三十）不完整。"
+    },
+    {
+      "id": "q30",
+      "topicId": "P1",
+      "question": "Ed: We are in the museum now. _______ talk loudly.\nSophia: Yes. If we do so, others won't feel comfortable.",
+      "options": {
+        "A": "Let's",
+        "B": "Let us",
+        "C": "Don't let",
+        "D": "Let's not"
+      },
+      "answer": "D",
+      "explanation": "否定的 Let's 句型為 Let's not + 原形動詞，表「我們不要……」。"
+    },
+    {
+      "id": "q31",
+      "topicId": "P1",
+      "question": "I am happy to live in Fun Town. The Lover River runs _______ our town, and we can see a lot of fish swimming in the clean water.",
+      "options": {
+        "A": "above",
+        "B": "beside",
+        "C": "through",
+        "D": "into"
+      },
+      "answer": "C",
+      "explanation": "河流「穿越」城鎮，用 through。"
+    },
+    {
+      "id": "q32",
+      "topicId": "P1",
+      "question": "Sophie enjoyed showing off the watch _______ her husband gave her as her birthday gift though it was not expensive.",
+      "options": {
+        "A": "who",
+        "B": "that",
+        "C": "where",
+        "D": "how"
+      },
+      "answer": "B",
+      "explanation": "修飾物品（the watch）的關係代名詞用 that 或 which。"
+    },
+    {
+      "id": "q33",
+      "topicId": "P1",
+      "question": "It _______ me two hours to drive from my house to the office every day, so I'm always tired when I arrive home from work.",
+      "options": {
+        "A": "costs",
+        "B": "pays",
+        "C": "spends",
+        "D": "takes"
+      },
+      "answer": "D",
+      "explanation": "It takes + 人 + 時間 + to V，為「花費時間」的固定句型。"
+    },
+    {
+      "id": "q34",
+      "topicId": "P1",
+      "question": "Tell Mr. Lu I can't take the call right now and _______ him call me back in the afternoon.",
+      "options": {
+        "A": "ask",
+        "B": "get",
+        "C": "have",
+        "D": "tell"
+      },
+      "answer": "C",
+      "explanation": "have + 受詞 + 原形動詞，使役動詞結構，不需要加 to；ask / tell / get 後需接 to V。"
+    },
+    {
+      "id": "q35",
+      "topicId": "P1",
+      "question": "Hank thought he put all the pens in the box. However, he found _______ on the chair when he stood up.",
+      "options": {
+        "A": "one",
+        "B": "other",
+        "C": "the only",
+        "D": "the other"
+      },
+      "answer": "A",
+      "explanation": "泛指「一支」筆，不特指某支，用不定代名詞 one。"
+    },
+    {
+      "id": "q36",
+      "topicId": "P1",
+      "question": "It is kind of the Lins _______ the poor children who cannot see or walk.",
+      "options": {
+        "A": "help",
+        "B": "helped",
+        "C": "helping",
+        "D": "to help"
+      },
+      "answer": "D",
+      "explanation": "It is + 形容詞 + of + 人 + to V，固定句型，用來評論某人的行為。"
+    },
+    {
+      "id": "q37",
+      "topicId": "P1",
+      "question": "_______ at by strangers always makes me feel terrible.",
+      "options": {
+        "A": "To look",
+        "B": "Looking",
+        "C": "Being looked",
+        "D": "Being looking"
+      },
+      "answer": "C",
+      "explanation": "「被陌生人盯著看」為被動語態的動名詞 Being looked at，作主詞。"
+    },
+    {
+      "id": "q38",
+      "topicId": "P1",
+      "question": "The news is _______ true. All of the people can't believe the news.",
+      "options": {
+        "A": "too good to be",
+        "B": "very good to be",
+        "C": "good enough to be",
+        "D": "so good that it can be"
+      },
+      "answer": "A",
+      "explanation": "too...to... 表「太……而不能……」，too good to be true 為固定片語（好得令人難以置信）。"
+    },
+    {
+      "id": "q39",
+      "topicId": "P1",
+      "question": "Sally _______ clothes on the balcony when the phone rang, so she didn't hear it.",
+      "options": {
+        "A": "hang",
+        "B": "has hung",
+        "C": "would hang",
+        "D": "was hanging"
+      },
+      "answer": "D",
+      "explanation": "when the phone rang 為過去某時點，Sally 正在晾衣服，用過去進行式 was hanging。"
+    }
+  ]
+}

@@ -20,6 +20,10 @@ import { chapter_noun_clauses } from './chapters/noun-clauses';
 import { chapter_past_exams } from './chapters/past-exams';
 import { chapter_book_a } from './chapters/book-a';
 import { chapter_book_b } from './chapters/book-b';
+import { chapter_exam_a } from './chapters/exam-a';
+import { chapter_exam_b } from './chapters/exam-b';
+import { chapter_paper_a } from './chapters/paper-a';
+import { chapter_paper_b } from './chapters/paper-b';
 
 export const GRAMMAR_DATA = {
   "ving-tov-imp": chapter_ving_tov_imp,
@@ -44,4 +48,8 @@ export const GRAMMAR_DATA = {
   "past-exams": chapter_past_exams,
   "book-a": chapter_book_a,
   "book-b": chapter_book_b,
+  "exam-a": chapter_exam_a,
+  "exam-b": chapter_exam_b,
+  "paper-a": chapter_paper_a,
+  "paper-b": chapter_paper_b,
 };
